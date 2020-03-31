@@ -1,26 +1,23 @@
-.preBox
-{
-    width: 60px;
+.preBox {
+  width: 60px;
 }
-#body
-{
-    height: 120px;
+#body {
+  height: 120px;
 }
-#inputBox
-{
-    margin: 0px;
-    margin-bottom: 2px !important;
-    padding: 0px;
+#inputBox {
+  margin: 0px;
+  margin-bottom: 2px !important;
+  padding: 0px;
 }
-#controlPanel
-{
-    margin: 5px;
+#controlPanel {
+  margin: 5px;
 }
-#uploadBtn,#downloadBtn,#saveBtn,#deleteBtn
-{
-    margin: 2px !important;
+#uploadBtn,
+#downloadBtn,
+#saveBtn,
+#deleteBtn {
+  margin: 2px !important;
 }
-#btnFile
-{
-    display:none;
+#btnFile {
+  display: none;
 }
