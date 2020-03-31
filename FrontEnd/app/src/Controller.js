@@ -18,16 +18,16 @@ export function download() {
   document.body.removeChild(temp);
 }
 export function deleteArticle() {
-  alert("正在开发中");
+  alert("后端服务正在开发中,暂时不可用");
 }
 export function newArticle() {
-  alert("正在开发中");
+  alert("后端服务正在开发中,暂时不可用");
 }
 export function saveArticle() {
-  alert("正在开发中");
+  alert("后端服务正在开发中,暂时不可用");
 }
 export function search() {
-  alert("正在开发中");
+  alert("后端服务正在开发中,暂时不可用");
 }
 export function loadEditorData(src) {
   for (var i in Field) {

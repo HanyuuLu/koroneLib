@@ -19,7 +19,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Navbar bg="light" expand="lg" fixed="top">
-          <Navbar.Brand href="#">koroneLib</Navbar.Brand>
+          <Navbar.Brand href="#">koroneLib (工程开发版)</Navbar.Brand>
           <Form inline>
             <FormControl
               type="text"
