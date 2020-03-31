@@ -2,19 +2,11 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Form, FormControl, Button, Container, Row, Col } from 'react-bootstrap';
-import { Editor } from './Editor.js';
+import { Editor } from './Editor';
 import { ArticleList } from './ArticleList';
+import { Field, editorData } from './Controller';
 function App() {
-  var Field = [
-    ["grade", "年级"],
-    ["unit", "单元"],
-    ["index", "课文号"],
-    ["subIndex", "子课文号"],
-    ["title", "标题"],
-    ["author", "作者"],
-    ["tag","标签"],
-    ["body", "正文"]
-  ];
+  editorData.note = new Map()
   var NoteList = { "N0": "n0", "N1": "n1" };
   let noteList = new Map()
   for (let i in NoteList)
@@ -43,7 +35,7 @@ function App() {
             <ArticleList list={demoArtleList}/>
           </Col>
           <Col>
-            <Editor fieldList={Field} noteList={noteList}/>
+            <Editor fieldList={Field} dataList={editorData}/>
           </Col>
         </Row>
       </Container>

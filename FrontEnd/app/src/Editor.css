@@ -1,6 +1,6 @@
 .preBox
 {
-    width: 90px;
+    width: 60px;
 }
 #body
 {
@@ -19,4 +19,8 @@
 #uploadBtn,#downloadBtn,#saveBtn,#deleteBtn
 {
     margin: 2px !important;
+}
+#btnFile
+{
+    display:none;
 }
