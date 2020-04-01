@@ -6,7 +6,7 @@ export class FileFetch extends Component {
     this.fileInput = React.createRef();
   }
   render() {
-    return <input Type="file" id="btnFile" onChange={this.fetch.bind(this)} />;
+    return <input type="file" id="btnFile" onChange={this.fetch.bind(this)} />;
   }
   fetch(e) {
     let files = e.target.files;

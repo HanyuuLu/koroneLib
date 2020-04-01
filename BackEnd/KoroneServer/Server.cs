@@ -11,13 +11,13 @@ namespace KoroneServer
     public class KoroneServer
     {
         public Dictionary<string, string> TitleList { get; }
-        private Dictionary<string, JsonDocument> CacheList;
+        private Dictionary<string, Article> CacheList;
         private string LibraryFolder;
         public static KoroneServer Instance { get; } = new KoroneServer();
         public KoroneServer()
         {
             TitleList = new Dictionary<string, string>();
-            CacheList = new Dictionary<string, JsonDocument>();
+            CacheList = new Dictionary<string, Article>();
             LibraryFolder = "./Library";
             if (!Directory.Exists(LibraryFolder))
             {
@@ -26,13 +26,13 @@ namespace KoroneServer
             flushTitleList();
             Console.WriteLine("KoroneServer初始化完成");
         }
-        public string getArticle(string filename)
+        public Article getArticle(string filename)
         {
             if(CacheList.ContainsKey(filename))
             {
-                return CacheList[filename].RootElement.ToString();
+                return CacheList[filename];
             }
-            return "";
+            return new Article();
         }
         public IDictionary<string,string> getArticleList(string? searchKey=null)
         {
@@ -41,29 +41,31 @@ namespace KoroneServer
         public void flushTitleList()
         {
             Console.WriteLine("触发全局刷新");
-            foreach (var filename in Directory.GetFiles(LibraryFolder, "*.json"))
+            foreach (var filename
+                in Directory.GetFiles(LibraryFolder, "*.json"))
             {
                 try
                 {
-                    var bytes = File.OpenRead(filename);
-                    var reader = JsonDocument.Parse(bytes);
+                    var jsonString = File.ReadAllText(filename);
+                    var filenameBase = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(filename));
+                    var article = JsonSerializer.Deserialize<Article>(jsonString);
 
-                    var title = reader.RootElement.GetProperty("title").GetString();
-                    if (!TitleList.ContainsKey(filename))
+                    var title = article.title;
+                    if (!TitleList.ContainsKey(filenameBase))
                     {
-                        TitleList.Add(filename, title);
+                        TitleList.Add(filenameBase, title);
                     }
-                    else if (TitleList[filename] != title)
+                    else
                     {
-                        TitleList[filename] = title;
+                        TitleList[filenameBase] = title;
                     }
-                    if (!CacheList.ContainsKey(filename))
+                    if (!CacheList.ContainsKey(filenameBase))
                     {
-                        CacheList.Add(filename, reader);
+                        CacheList.Add(filenameBase, article);
                     }
-                    else if (CacheList[filename].GetHashCode() != reader.GetHashCode())
+                    else
                     {
-                        CacheList[filename] = reader;
+                        CacheList[filenameBase] = article;
                     }
                 }
                 catch (Exception e)
@@ -71,7 +73,6 @@ namespace KoroneServer
                     Console.WriteLine(string.Format("{0}\n{1}", filename, e.Message));
                 }
             }
-            Console.WriteLine(getArticle("./Library\\七上《论语》十二章.json"));
         }
     }
 }

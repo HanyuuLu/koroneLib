@@ -1,5 +1,6 @@
 import { Field } from "./Editor";
 import data from "./dataModel";
+import * as REST from "./REST";
 const { articleData } = data;
 
 export function upload() {
@@ -27,6 +28,7 @@ export function saveArticle() {
   alert("后端服务正在开发中,暂时不可用");
 }
 export function search() {
+  REST.RESTsearch();
   alert("后端服务正在开发中,暂时不可用");
 }
 export function loadEditorData(src) {

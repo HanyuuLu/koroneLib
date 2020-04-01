@@ -69,16 +69,16 @@ export const Editor = observer(() => {
         <FileFetch />
       </div>
       {Field.slice(0, Field.length - 1, 1).map((i) => (
-        <InputGroup className="mb-3" id="inputBox">
+        <InputGroup className="mb-3" id="inputBox" key={i[0]}>
           <InputGroup.Prepend id="pre">
             <InputGroup.Text id={i[1]}>
-              <div class="preBox">{i[1]}</div>
+              <div className="preBox">{i[1]}</div>
             </InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
             placeholder={i[0]}
             aria-describedby="basic-addon1"
-            value={articleData[i[0]]}
+            value={articleData[i[0]] || ""}
             onChange={(e) => (articleData[i[0]] = e.target.value)}
           />
         </InputGroup>
@@ -86,22 +86,22 @@ export const Editor = observer(() => {
       <InputGroup>
         <InputGroup.Prepend>
           <InputGroup.Text id="preBox">
-            <div class="preBox">正文</div>
+            <div className="preBox">正文</div>
           </InputGroup.Text>
         </InputGroup.Prepend>
         <FormControl
           placeholder="body (拖拽右下角三角滑块可以调节本文本框大小)"
           as="textarea"
           aria-label="With textarea"
-          value={articleData.body}
+          value={articleData.body || ""}
           onChange={(e) => (articleData.body = e.target.value)}
         />
       </InputGroup>
       {Object.keys(articleData.node).map((key) => (
-        <InputGroup className="mb-3" id="inputBox">
+        <InputGroup className="mb-3" id="inputBox" key={key}>
           <InputGroup.Prepend>
             <InputGroup.Text id="basic-addon1">
-              <div class="preBox">{key}</div>
+              <div className="preBox">{key}</div>
             </InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl

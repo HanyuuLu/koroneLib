@@ -11,6 +11,7 @@ export function ArticleList() {
       {/* <ListGroup.Item active onClick={(e) => { SelectArticle(e, 'A') }}>选中标题</ListGroup.Item> */}
       {Object.keys(articleList).map((key) => (
         <ListGroup.Item
+          key={key}
           onClick={(e) => {
             SelectArticle(e, key);
           }}
