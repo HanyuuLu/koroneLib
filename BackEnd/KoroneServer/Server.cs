@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 //using Microsoft.Extensions.Configuration;
 
 namespace KoroneServer
@@ -28,13 +29,13 @@ namespace KoroneServer
         }
         public Article getArticle(string filename)
         {
-            if(CacheList.ContainsKey(filename))
+            if (CacheList.ContainsKey(filename))
             {
                 return CacheList[filename];
             }
             return new Article();
         }
-        public IDictionary<string,string> getArticleList(string? searchKey=null)
+        public IDictionary<string, string> getArticleList(string? searchKey = null)
         {
             return TitleList;
         }
@@ -47,7 +48,7 @@ namespace KoroneServer
                 try
                 {
                     var jsonString = File.ReadAllText(filename);
-                    var filenameBase = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(filename));
+                    var filenameBase = base64x(filename);
                     var article = JsonSerializer.Deserialize<Article>(jsonString);
 
                     var title = article.title;
@@ -73,6 +74,69 @@ namespace KoroneServer
                     Console.WriteLine(string.Format("{0}\n{1}", filename, e.Message));
                 }
             }
+        }
+        public string update(string id,Article content)
+        {
+            if (CacheList.ContainsKey(id))
+            {
+                CacheList[id] = content;
+            }
+            else
+            {
+                var filename = $"{LibraryFolder}/{content.title}-{content.author}.json";
+                TitleList.Add(base64x(filename), content.title);
+                CacheList.Add(base64x(filename), content);
+                File.WriteAllText(filename,JsonSerializer.Serialize(content));
+            }
+            return id;
+        }
+        public void delete(string id)
+        {
+            if(File.Exists(rebase64x(id)))
+            {
+                File.Delete(rebase64x(id));
+                if(TitleList.ContainsKey(id))
+                {
+                    TitleList.Remove(id);
+                }
+                if(CacheList.ContainsKey(id))
+                {
+                    CacheList.Remove(id);
+                }
+            }
+        }
+        public IDictionary<string,string> search(string src)
+        {
+            if (src==null || src=="")
+            { return KoroneServer.Instance.getArticleList(src); }
+            Dictionary<string, string> res = new Dictionary<string, string>();
+            foreach(var i in CacheList)
+            {
+                if(
+                    i.Value.title.Contains(src) ||
+                    i.Value.author.Contains(src) ||
+                    i.Value.tag.Contains(src)||
+                    i.Value.body.Contains(src)
+                    )
+                {
+                    res.Add(i.Key, i.Value.title);
+                    continue;
+                }
+                foreach(var j in i.Value.node)
+                {
+                    if(j.Value.Contains(src))
+                    { res.Add(i.Key, i.Value.title); break; }
+                }
+            }
+            return res;
+        }
+        public string base64x(string src)
+        {
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(src)).Replace("+", "-").Replace("/", "_");
+        }
+        public string rebase64x(string src)
+        {
+            return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(src.Replace("-", "+").Replace("_", "/")));
         }
     }
 }

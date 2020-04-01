@@ -108,6 +108,9 @@ export const Editor = observer(() => {
             placeholder="note"
             aria-describedby="basic-addon1"
             value={articleData.node[key]}
+            onChange={(e) => {
+              articleData.node[key] = e.target.value;
+            }}
           ></FormControl>
           <InputGroup.Append>
             <Button

@@ -1,24 +1,23 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import data from "./dataModel";
-const { articleList } = data;
-function SelectArticle(e, id) {
-  alert(`切换到id为${id}的课文`);
-}
-export function ArticleList() {
+import { observer } from "mobx-react-lite";
+import { SelectArticle } from "./Controller";
+
+export const ArticleList = observer(() => {
   return (
     <ListGroup variant="flush">
       {/* <ListGroup.Item active onClick={(e) => { SelectArticle(e, 'A') }}>选中标题</ListGroup.Item> */}
-      {Object.keys(articleList).map((key) => (
+      {Object.keys(data.articleList).map((key) => (
         <ListGroup.Item
           key={key}
           onClick={(e) => {
-            SelectArticle(e, key);
+            SelectArticle(key);
           }}
         >
-          {articleList[key]}
+          {data.articleList[key]}
         </ListGroup.Item>
       ))}
     </ListGroup>
   );
-}
+});

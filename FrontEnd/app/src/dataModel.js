@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 
 const state = observable({
-  articleList: { 98327: "983", 38674: "98475", 329874: "98437" },
+  articleList: { 暂无数据: "1" },
   articleData: {
     grade: null,
     unit: null,
@@ -13,6 +13,8 @@ const state = observable({
     body: null,
     node: {},
   },
+  currentArticleId: null,
+  searchWord: "",
 });
 
 export default state;

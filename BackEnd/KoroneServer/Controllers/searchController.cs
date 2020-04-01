@@ -22,7 +22,7 @@ namespace KoroneServer
         [HttpGet("{key}")]
         public IDictionary<string, string> Get(string key)
         {
-            return KoroneServer.Instance.getArticleList(key);
+            return KoroneServer.Instance.search(key);
         }
     }
 }

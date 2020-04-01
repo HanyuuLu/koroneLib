@@ -15,7 +15,7 @@ namespace KoroneServer
         [HttpGet]
         public String Get()
         {
-            return "hi";
+            return "alive";
         }
         // GET api/<controller>/5
         [HttpGet("{id}")]
@@ -26,20 +26,47 @@ namespace KoroneServer
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public string Post([FromBody]Article value)
         {
+            if (value == null)
+            {
+                Response.StatusCode = 404;
+                return "bad request";
+            }
+            else if(value.node.ContainsKey("type") && value.node.ContainsKey("id"))
+            {
+                if (value.node["type"] == "update")
+                {
+                    string id = value.node["type"];
+                    value.node.Remove("type");
+                    value.node.Remove("id");
+                    KoroneServer.Instance.update(id, value);
+                    return id;
+                }
+                else if (value.node["type"] == "delete")
+                {
+                    KoroneServer.Instance.delete(value.node["id"]);
+                }
+                return "none";
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return "bad request";
+            }
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        //// PUT api/<controller>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //    Console.WriteLine(value);
+        //}
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //// DELETE api/<controller>/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }
