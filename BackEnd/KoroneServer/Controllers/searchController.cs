@@ -13,14 +13,14 @@ namespace KoroneServer
     {
         // GET: api/<controller>
         [HttpGet]
-        public IDictionary<string,string> Get()
+        public IDictionary<string,SearchInfo> Get()
         {
-            return KoroneServer.Instance.getArticleList();
+            return KoroneServer.Instance.search();
         }
 
         // GET api/<controller>/5
         [HttpGet("{key}")]
-        public IDictionary<string, string> Get(string key)
+        public IDictionary<string, SearchInfo> Get(string key)
         {
             return KoroneServer.Instance.search(key);
         }

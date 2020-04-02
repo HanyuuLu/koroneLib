@@ -16,5 +16,22 @@ namespace KoroneServer
         public string tag { get; set; } = "";
         public string body { get; set; } = "";
         public Dictionary<string, string> node { get; set; }
+        public Article(string title)
+        {
+            this.title = title;
+        }
+        public Article()
+        {
+
+        }
+    }
+    public class SearchInfo
+    {
+        public string title { get; set; } = "";
+        public List<string> node { get; set; } = new List<string>();
+        public SearchInfo(string title)
+        {
+            this.title = title;
+        }
     }
 }

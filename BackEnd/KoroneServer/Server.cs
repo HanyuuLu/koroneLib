@@ -11,15 +11,13 @@ namespace KoroneServer
 {
     public class KoroneServer
     {
-        public Dictionary<string, string> TitleList { get; }
         private Dictionary<string, Article> CacheList;
         private string LibraryFolder;
         public static KoroneServer Instance { get; } = new KoroneServer();
         public KoroneServer()
         {
-            TitleList = new Dictionary<string, string>();
             CacheList = new Dictionary<string, Article>();
-            LibraryFolder = "./Library";
+            LibraryFolder = "./Lib";
             if (!Directory.Exists(LibraryFolder))
             {
                 Directory.CreateDirectory(LibraryFolder);
@@ -33,102 +31,158 @@ namespace KoroneServer
             {
                 return CacheList[filename];
             }
-            return new Article();
-        }
-        public IDictionary<string, string> getArticleList(string? searchKey = null)
-        {
-            return TitleList;
+            return new Article("访问了不存在的文档，文档可能已被删除，请刷新重试");
         }
         public void flushTitleList()
         {
             Console.WriteLine("触发全局刷新");
-            foreach (var filename
+            foreach (var filenameWtihPath
                 in Directory.GetFiles(LibraryFolder, "*.json"))
             {
                 try
                 {
-                    var jsonString = File.ReadAllText(filename);
-                    var filenameBase = base64x(filename);
+                    var jsonString = File.ReadAllText(filenameWtihPath);
+                    var filenameBase = base64x(Path.GetFileName(filenameWtihPath));
                     var article = JsonSerializer.Deserialize<Article>(jsonString);
 
                     var title = article.title;
-                    if (!TitleList.ContainsKey(filenameBase))
-                    {
-                        TitleList.Add(filenameBase, title);
-                    }
-                    else
-                    {
-                        TitleList[filenameBase] = title;
-                    }
                     if (!CacheList.ContainsKey(filenameBase))
                     {
-                        CacheList.Add(filenameBase, article);
+                        lock (CacheList)
+                        {
+                            CacheList.Add(filenameBase, article);
+                        }
                     }
                     else
                     {
-                        CacheList[filenameBase] = article;
+                        lock(CacheList)
+                        { 
+                            CacheList[filenameBase] = article;
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(string.Format("{0}\n{1}", filename, e.Message));
+                    Console.WriteLine(string.Format("{0}\n{1}", filenameWtihPath, e.Message));
                 }
             }
+            Console.WriteLine($"已加载 {CacheList.Count} 篇文档");
         }
-        public string update(string id,Article content)
+        public string update(string id, Article content)
         {
-            if (CacheList.ContainsKey(id))
+            var filename = genFilenmae(content);
+            var newID = base64x(filename);
+            try
             {
-                CacheList[id] = content;
+
+                if (!CacheList.ContainsKey(newID))
+                {
+                    lock (CacheList)
+                    {
+                        CacheList.Add(newID, content);
+                    }
+                }
+                else
+                {
+                    lock (CacheList)
+                    {
+                        CacheList[newID] = content;
+                    }
+                }
+                /*
+                 * TODO:加上脏写功能
+                 */
+                File.WriteAllText(Path.Join(LibraryFolder, filename), JsonSerializer.Serialize(content));
+                if (id != newID)
+                {
+                    delete(id);
+                }
+                return newID;
             }
-            else
+            catch (Exception e)
             {
-                var filename = $"{LibraryFolder}/{content.title}-{content.author}.json";
-                TitleList.Add(base64x(filename), content.title);
-                CacheList.Add(base64x(filename), content);
-                File.WriteAllText(filename,JsonSerializer.Serialize(content));
+                Console.WriteLine(e.Message);
+                return newID;
             }
-            return id;
+            finally
+            {
+                flushTitleList();
+            }
         }
         public void delete(string id)
         {
-            if(File.Exists(rebase64x(id)))
+            try
             {
-                File.Delete(rebase64x(id));
-                if(TitleList.ContainsKey(id))
+                var filenameWithPath = Path.Join(LibraryFolder, rebase64x(id));
+                if (File.Exists(filenameWithPath))
                 {
-                    TitleList.Remove(id);
+                    File.Delete(filenameWithPath);
                 }
-                if(CacheList.ContainsKey(id))
+                if (CacheList.ContainsKey(id))
                 {
-                    CacheList.Remove(id);
+                    lock (CacheList)
+                    {
+                        CacheList.Remove(id);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
-        public IDictionary<string,string> search(string src)
+        public IDictionary<string, SearchInfo> search(string src = "")
         {
-            if (src==null || src=="")
-            { return KoroneServer.Instance.getArticleList(src); }
-            Dictionary<string, string> res = new Dictionary<string, string>();
-            foreach(var i in CacheList)
+            flushTitleList();
+            Dictionary<string, SearchInfo> res = new Dictionary<string, SearchInfo>();
+            if (src == "")
             {
-                if(
-                    i.Value.title.Contains(src) ||
-                    i.Value.author.Contains(src) ||
-                    i.Value.tag.Contains(src)||
-                    i.Value.body.Contains(src)
-                    )
+                lock (CacheList)
                 {
-                    res.Add(i.Key, i.Value.title);
-                    continue;
+                    foreach (var i in CacheList)
+                    {
+                        res.Add(i.Key, new SearchInfo(genArticleItemListHeader(i.Value)));
+                    }
                 }
-                foreach(var j in i.Value.node)
-                {
-                    if(j.Value.Contains(src))
-                    { res.Add(i.Key, i.Value.title); break; }
-                }
+                return res;
             }
-            return res;
+            else
+            {
+                lock (CacheList)
+                {
+                    foreach (var i in CacheList)
+                    {
+                        SearchInfo item = new SearchInfo(genArticleItemListHeader(i.Value));
+                        if (i.Value.title.Contains(src))
+                        {
+                            item.node.Add(i.Value.title);
+                        }
+                        if (i.Value.author.Contains(src))
+                        {
+                            item.node.Add(i.Value.author);
+                        }
+                        if (i.Value.tag.Contains(src))
+                        {
+                            item.node.Add(i.Value.tag);
+                        }
+                        if (i.Value.body.Contains(src))
+                        {
+                            item.node.Add(i.Value.body);
+                        }
+
+                        foreach (var j in i.Value.node)
+                        {
+                            if (j.Value.Contains(src))
+                            { item.node.Add(j.Value); }
+                        }
+                        if (item.node.Count > 0)
+                        {
+                            res.Add(i.Key, item);
+                        }
+                    }
+                }
+                return res;
+            }
         }
         public string base64x(string src)
         {
@@ -137,6 +191,14 @@ namespace KoroneServer
         public string rebase64x(string src)
         {
             return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(src.Replace("-", "+").Replace("_", "/")));
+        }
+        public string genFilenmae(Article src)
+        {
+            return $"{src.grade}-{src.unit}-{src.title}-{src.author}.json";
+        }
+        public string genArticleItemListHeader(Article src)
+        {
+            return $"[{src.grade}] {src.title}-{src.author}";
         }
     }
 }

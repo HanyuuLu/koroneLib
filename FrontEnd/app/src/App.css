@@ -1,3 +1,23 @@
-#main{
-  margin-top: 80px;
+.App {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+#main {
+  padding-top: 80px;
+  height: 100%;
+}
+.articleList {
+  height: 100%;
+  overflow: auto;
+}
+.editor {
+  height: 100%;
+  overflow: auto;
+}
+#row {
+  height: 100%;
 }

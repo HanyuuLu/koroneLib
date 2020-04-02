@@ -11,11 +11,11 @@ function App() {
     <div className="App">
       <NavBar />
       <Container id="main">
-        <Row>
-          <Col xs={4}>
+        <Row id="row">
+          <Col xs={4} className="articleList">
             <ArticleList />
           </Col>
-          <Col>
+          <Col className="editor">
             <Editor />
           </Col>
         </Row>
