@@ -22,8 +22,7 @@ namespace KoroneServer
         [HttpGet("{key}")]
         public IDictionary<string, SearchInfo> Get(string key,string type)
         {
-            Console.WriteLine(type);
-            return KoroneServer.Instance.search(key);
+            return KoroneServer.Instance.search(key,type);
         }
     }
 }

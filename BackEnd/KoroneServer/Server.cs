@@ -135,7 +135,7 @@ namespace KoroneServer
                 flushTitleList();
             }
         }
-        public IDictionary<string, SearchInfo> search(string src = "")
+        public IDictionary<string, SearchInfo> search(string src = "",string type="0")
         {
             Dictionary<string, SearchInfo> res = new Dictionary<string, SearchInfo>();
             if (src == "")
@@ -151,32 +151,45 @@ namespace KoroneServer
             }
             else
             {
+                int typeInt;
+                try
+                {
+                    typeInt = int.Parse(type);
+                }
+                catch
+                {
+                    return search();
+                }
                 lock (CacheList)
                 {
                     foreach (var i in CacheList)
                     {
                         SearchInfo item = new SearchInfo(genArticleItemListHeader(i.Value));
-                        if (i.Value.title.Contains(src))
+                        var propList = i.Value.GetType().GetProperties();
+                        var typeCopy = typeInt;
+                        foreach(var prop in propList)
                         {
-                            item.node.Add(i.Value.title);
-                        }
-                        if (i.Value.author.Contains(src))
-                        {
-                            item.node.Add(i.Value.author);
-                        }
-                        if (i.Value.tag.Contains(src))
-                        {
-                            item.node.Add(i.Value.tag);
-                        }
-                        if (i.Value.body.Contains(src))
-                        {
-                            item.node.Add(i.Value.body);
-                        }
-
-                        foreach (var j in i.Value.node)
-                        {
-                            if (j.Value.Contains(src))
-                            { item.node.Add(j.Value); }
+                            if((typeCopy & 1)==0)
+                            {
+                                if (prop.PropertyType.ToString().Contains("System.Collections"))
+                                {
+                                    foreach(var j in prop.GetValue(i.Value) as Dictionary<string,string>)
+                                    {
+                                        if(j.Value.Contains(src))
+                                        {
+                                            item.node.Add($"[node] {j.Value}");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if(prop.GetValue(i.Value).ToString().Contains(src))
+                                    {
+                                        item.node.Add($"[{prop.Name}] {prop.GetValue(i.Value).ToString()}");
+                                    }
+                                }
+                            }
+                            typeCopy >>= 1;
                         }
                         if (item.node.Count > 0)
                         {
