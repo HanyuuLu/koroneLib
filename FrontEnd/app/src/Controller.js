@@ -1,6 +1,7 @@
 import { Field } from "./Editor";
 import data from "./dataModel";
 import state from "./dataModel";
+import { message } from "antd";
 let { articleData } = data;
 
 export function upload() {
@@ -67,36 +68,60 @@ export function SelectArticle(id) {
 
 const axios = require("axios");
 export function RESTsearch(src = "") {
-  axios.get(`/api/search/${src}`).then(function (response) {
-    if (response.data !== "failure") {
-      state.articleList = response.data;
-    }
-  });
+  axios
+    .get(`/api/search/${src}`, { type: data.searchType })
+    .then(function (response) {
+      if (response.data !== "failure") {
+        state.articleList = response.data;
+      } else {
+        message.error("数据异常");
+      }
+    })
+    .catch(function (error) {
+      message.error("网络连接失败");
+    });
 }
 export function RESTarticle(src = "") {
-  axios.get(`/api/article/${src}`).then(function (response) {
-    if (response.status === 200) {
-      for (let i of Field) {
-        state.articleData[i[0]] = response.data[i[0]];
+  axios
+    .get(`/api/article/${src}`)
+    .then(function (response) {
+      if (response.status === 200) {
+        for (let i of Field) {
+          state.articleData[i[0]] = response.data[i[0]];
+        }
+        state.articleData.node = response.data.node;
       }
-      state.articleData.node = response.data.node;
-    }
-  });
+    })
+    .catch(function (error) {
+      message.error("网络连接失败");
+    });
 }
 export function RESTupdate(src = "", id = "", type = "update") {
   let temp = JSON.parse(src);
   temp.node["id"] = id;
   temp.node["type"] = type;
-  axios.post("/api/article", temp).then(function (response) {
-    if (response.state !== "bad request" && response.state !== "none") {
-      state.currentArticleId = response.data;
-    } else {
-      console.log(response.state);
-      state.currentArticleId = null;
-      if (type === "delete") {
-        newArticle();
+  axios
+    .post("/api/article", temp)
+    .then(function (response) {
+      if (response.state !== "bad request" && response.state !== "none") {
+        state.currentArticleId = response.data;
+        if (type === "update") {
+          message.success("已保存");
+        } else if (type === "delete") {
+          message.success("已删除");
+        } else {
+          message.success("操作成功");
+        }
+      } else {
+        console.log(response.state);
+        state.currentArticleId = null;
+        if (type === "delete") {
+          newArticle();
+        }
       }
-    }
-  });
-  search();
+      search(data.searchWord);
+    })
+    .catch(function (error) {
+      message.error("网络连接失败");
+    });
 }

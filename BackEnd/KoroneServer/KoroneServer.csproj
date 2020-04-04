@@ -4,5 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Figgle" Version="0.3.0" />
+  </ItemGroup>
+
 
 </Project>

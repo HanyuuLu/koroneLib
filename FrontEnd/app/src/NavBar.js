@@ -1,39 +1,28 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Navbar, FormControl, Button } from "react-bootstrap";
-import { search } from "./Controller";
+import { PageHeader, Switch } from "antd";
 import data from "./dataModel";
-import { IconSearch } from "./svg";
+
 import "./NavBar.css";
 
 export const NavBar = observer(() => {
   return (
-    <header className="App-header">
-      <Navbar bg="light" expand="lg" fixed="top" className="navBox">
-        <Navbar.Brand href="#">koroneLib (工程开发版)</Navbar.Brand>
-        <FormControl
-          type="text"
-          placeholder="输入搜索关键词（目前仅支持单关键词）"
-          className="mr-sm-2"
-          value={data.searchWord}
-          onChange={(e) => {
-            data.searchWord = e.target.value;
-          }}
-          onKeyDown={(e) => {
-            if (e.keyCode === 13) {
-              search(data.searchWord);
-            }
-          }}
-        />
-        <Button
-          variant="outline-success"
-          onClick={(e) => {
-            search(data.searchWord);
-          }}
-        >
-          <IconSearch />
-        </Button>
-      </Navbar>
-    </header>
+    <>
+      <PageHeader
+        className="site-page-header"
+        title="KoroneLib"
+        subTitle="https://github.com/HanyuuLu/koroneLib"
+        extra={[
+          <Switch
+            checkedChildren="编辑器已显示"
+            unCheckedChildren="编辑器已隐藏"
+            onChange={(checked) => {
+              data.showEditor = checked;
+              console.log(checked);
+            }}
+          />,
+        ]}
+      />
+    </>
   );
 });

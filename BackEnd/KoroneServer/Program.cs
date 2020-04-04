@@ -14,6 +14,7 @@ namespace KoroneServer
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine(Figgle.FiggleFonts.Standard.Render("Korone Server!"));
             KoroneServer temp =  KoroneServer.Instance;
             CreateHostBuilder(args).Build().Run();
         }

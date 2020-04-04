@@ -23,7 +23,9 @@ const state = observable({
     node: {},
   },
   currentArticleId: null,
+  showEditor: false,
   searchWord: "",
+  searchType: 0,
 });
 
 export default state;
