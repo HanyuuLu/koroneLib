@@ -62,6 +62,7 @@ export function deleteNode(tag) {
   }
 }
 export function SelectArticle(id) {
+  data.showEditor = true;
   state.currentArticleId = id;
   RESTarticle(id);
 }
@@ -69,7 +70,7 @@ export function SelectArticle(id) {
 const axios = require("axios");
 export function RESTsearch(src = "") {
   axios
-    .get(`/api/search/${src}`, { type: data.searchType })
+    .get(`/api/search/${src}`, { params: { type: data.searchType } })
     .then(function (response) {
       if (response.data !== "failure") {
         state.articleList = response.data;

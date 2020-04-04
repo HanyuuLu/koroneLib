@@ -130,10 +130,13 @@ namespace KoroneServer
             {
                 Console.WriteLine(e.Message);
             }
+            finally
+            {
+                flushTitleList();
+            }
         }
         public IDictionary<string, SearchInfo> search(string src = "")
         {
-            flushTitleList();
             Dictionary<string, SearchInfo> res = new Dictionary<string, SearchInfo>();
             if (src == "")
             {

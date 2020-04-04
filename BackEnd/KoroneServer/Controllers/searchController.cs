@@ -20,8 +20,9 @@ namespace KoroneServer
 
         // GET api/<controller>/5
         [HttpGet("{key}")]
-        public IDictionary<string, SearchInfo> Get(string key)
+        public IDictionary<string, SearchInfo> Get(string key,string type)
         {
+            Console.WriteLine(type);
             return KoroneServer.Instance.search(key);
         }
     }

@@ -20,6 +20,7 @@ export const NavBar = observer(() => {
               data.showEditor = checked;
               console.log(checked);
             }}
+            checked={data.showEditor}
           />,
         ]}
       />

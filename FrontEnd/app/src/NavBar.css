@@ -1,4 +1,3 @@
-.navBox {
-  color: red;
-  background-color: red;
+.site-page-header {
+  z-index: 1;
 }
