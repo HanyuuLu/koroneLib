@@ -1,5 +1,6 @@
 import React from "react";
-import { Input, Collapse, Checkbox } from "antd";
+import { Input, Collapse, Checkbox, Select, Row, Col, Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { ListGroup } from "react-bootstrap";
 import data from "./dataModel";
 import { observer } from "mobx-react-lite";
@@ -17,15 +18,16 @@ SearchList.push("注释");
 export const ArticleList = observer(() => {
   return (
     <>
-      <Search
-        placeholder="目前仅支持单关键词"
-        onSearch={(value) => search(value)}
-      />
       <Collapse bordered={false}>
-        <Collapse.Panel header="精确搜索选项" key="1">
+        <Collapse.Panel header="旧版搜索" key="1">
+          <Search
+            placeholder="仅支持单关键词"
+            onSearch={(value) => search(value)}
+          />
           <SearchTypeBox />
         </Collapse.Panel>
       </Collapse>
+      <SearchBox />
       <ListGroup>
         {Object.keys(data.articleList).map((key) => (
           <TitleBox id={key} />
@@ -53,6 +55,44 @@ function TitleBox(props) {
   );
 }
 
+class SearchBox extends React.Component {
+  LimitList = { None: "全局" };
+
+  state = {
+    searchList: [],
+    limitType: "",
+  };
+  SearchBox() {
+    for (let i in Field) {
+      this.LimitList[i[0]] = i[1];
+    }
+  }
+  render() {
+    return (
+      <>
+        <Row>
+          <Col>
+            <Select defaultValue="None">
+              <Select.Option value="Author"> 作者</Select.Option>
+            </Select>
+          </Col>
+          <Col flex="auto">
+            <Select
+              mode="tags"
+              style={{ width: "100%" }}
+              placeholder="添加搜索标签，开始搜索"
+            >
+              {["a", "b"]}
+            </Select>
+          </Col>
+          <Col>
+            <Button icon={<SearchOutlined />} />
+          </Col>
+        </Row>
+      </>
+    );
+  }
+}
 class SearchTypeBox extends React.Component {
   state = {
     checkedList: SearchList,

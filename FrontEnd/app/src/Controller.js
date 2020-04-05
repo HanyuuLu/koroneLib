@@ -72,7 +72,7 @@ export function RESTsearch(src = "") {
   axios
     .get(`/api/search/${src}`, { params: { type: data.searchType } })
     .then(function (response) {
-      if (response.data !== "failure") {
+      if (response.data !== "fa  ilure") {
         state.articleList = response.data;
       } else {
         message.error("数据异常");
