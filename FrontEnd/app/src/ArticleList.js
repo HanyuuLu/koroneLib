@@ -4,7 +4,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { ListGroup } from "react-bootstrap";
 import data from "./dataModel";
 import { observer } from "mobx-react-lite";
-import { SelectArticle, search } from "./Controller";
+import { SelectArticle, search, preciseSearch } from "./Controller";
 import "./ArticleList.css";
 import { Field } from "./Editor";
 const { Search } = Input;
@@ -56,24 +56,28 @@ function TitleBox(props) {
 }
 
 class SearchBox extends React.Component {
-  LimitList = { None: "全局" };
-
   state = {
     searchList: [],
-    limitType: "",
+    limitType: "none",
+    lastLength: 0,
   };
-  SearchBox() {
-    for (let i in Field) {
-      this.LimitList[i[0]] = i[1];
-    }
-  }
   render() {
     return (
       <>
         <Row>
           <Col>
-            <Select defaultValue="None">
-              <Select.Option value="Author"> 作者</Select.Option>
+            <Select
+              defaultValue="无限制"
+              onChange={(value) => {
+                this.setState({ limitType: value });
+              }}
+            >
+              <Select.Option value="none">无限制</Select.Option>
+              {Object.keys(Field).map((key) => (
+                <Select.Option value={Field[key][0]}>
+                  {Field[key][1]}
+                </Select.Option>
+              ))}
             </Select>
           </Col>
           <Col flex="auto">
@@ -81,12 +85,26 @@ class SearchBox extends React.Component {
               mode="tags"
               style={{ width: "100%" }}
               placeholder="添加搜索标签，开始搜索"
+              onChange={(value) => {
+                if (this.state.lastLength < value.length) {
+                  value[value.length - 1] = `${this.state.limitType}:${
+                    value[value.length - 1]
+                  }`;
+                }
+                this.setState({ searchList: value });
+                this.setState({ lastLength: value.length });
+              }}
             >
-              {["a", "b"]}
+              {this.limitType}
             </Select>
           </Col>
           <Col>
-            <Button icon={<SearchOutlined />} />
+            <Button
+              icon={<SearchOutlined />}
+              onClick={(_) => {
+                preciseSearch(this.state.searchList);
+              }}
+            />
           </Col>
         </Row>
       </>

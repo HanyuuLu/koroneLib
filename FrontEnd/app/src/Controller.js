@@ -43,6 +43,17 @@ export function saveArticle() {
 export function search(src) {
   RESTsearch(src);
 }
+export function preciseSearch(src) {
+  let dict = new Map();
+  src.forEach((element) => {
+    let inf = element.split(":");
+    if (!dict.has(inf[0])) {
+      dict.set(inf[0], []);
+    }
+    dict.get(inf[0]).push(inf[1]);
+  });
+  RESTpreciseSearch(dict);
+}
 export function loadEditorData(src) {
   for (var i in Field) {
     articleData[Field[i][0]] = src[Field[i][0]];
@@ -72,7 +83,21 @@ export function RESTsearch(src = "") {
   axios
     .get(`/api/search/${src}`, { params: { type: data.searchType } })
     .then(function (response) {
-      if (response.data !== "fa  ilure") {
+      if (response.data !== "failure") {
+        state.articleList = response.data;
+      } else {
+        message.error("数据异常");
+      }
+    })
+    .catch(function (error) {
+      message.error("网络连接失败");
+    });
+}
+export function RESTpreciseSearch(src) {
+  axios
+    .get(`/api/precisesearch/`, { params: { src } })
+    .then(function (response) {
+      if (response.data !== "failure") {
         state.articleList = response.data;
       } else {
         message.error("数据异常");
