@@ -44,13 +44,13 @@ export function search(src) {
   RESTsearch(src);
 }
 export function preciseSearch(src) {
-  let dict = new Map();
+  let dict = {};
   src.forEach((element) => {
     let inf = element.split(":");
-    if (!dict.has(inf[0])) {
-      dict.set(inf[0], []);
+    if (!dict[inf[0]]) {
+      dict[inf[0]] = [];
     }
-    dict.get(inf[0]).push(inf[1]);
+    dict[inf[0]].push(inf[1]);
   });
   RESTpreciseSearch(dict);
 }
