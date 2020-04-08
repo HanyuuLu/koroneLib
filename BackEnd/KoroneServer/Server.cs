@@ -55,8 +55,8 @@ namespace KoroneServer
                     }
                     else
                     {
-                        lock(CacheList)
-                        { 
+                        lock (CacheList)
+                        {
                             CacheList[filenameBase] = article;
                         }
                     }
@@ -135,7 +135,7 @@ namespace KoroneServer
                 flushTitleList();
             }
         }
-        public IDictionary<string, SearchInfo> search(string src = "",string type="0")
+        public IDictionary<string, SearchInfo> search(string src = "", string type = "0")
         {
             Dictionary<string, SearchInfo> res = new Dictionary<string, SearchInfo>();
             if (src == "")
@@ -167,15 +167,15 @@ namespace KoroneServer
                         SearchInfo item = new SearchInfo(genArticleItemListHeader(i.Value));
                         var propList = i.Value.GetType().GetProperties();
                         var typeCopy = typeInt;
-                        foreach(var prop in propList)
+                        foreach (var prop in propList)
                         {
-                            if((typeCopy & 1)==0)
+                            if ((typeCopy & 1) == 0)
                             {
                                 if (prop.PropertyType.ToString().Contains("System.Collections"))
                                 {
-                                    foreach(var j in prop.GetValue(i.Value) as Dictionary<string,string>)
+                                    foreach (var j in prop.GetValue(i.Value) as Dictionary<string, string>)
                                     {
-                                        if(j.Value.Contains(src))
+                                        if (j.Value.Contains(src))
                                         {
                                             item.node.Add($"[node] {j.Value}");
                                         }
@@ -183,7 +183,7 @@ namespace KoroneServer
                                 }
                                 else
                                 {
-                                    if(prop.GetValue(i.Value).ToString().Contains(src))
+                                    if (prop.GetValue(i.Value).ToString().Contains(src))
                                     {
                                         item.node.Add($"[{prop.Name}] {prop.GetValue(i.Value).ToString()}");
                                     }
@@ -199,6 +199,84 @@ namespace KoroneServer
                 }
                 return res;
             }
+        }
+        public IDictionary<string, SearchInfo> preciseSearch(string src = "")
+        {
+            var res = new Dictionary<string, SearchInfo>();
+            Dictionary<string, List<string>> type;
+            try
+            {
+                type = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(src);
+            }
+            catch
+            {
+                return search();
+            }
+            foreach (var articlePair in CacheList)
+            {
+                var searchInfo = new SearchInfo(articlePair.Value.title);
+                var propTypes = articlePair.Value.GetType().GetProperties();
+                foreach (var prop in propTypes)
+                {
+                    if (prop.PropertyType.ToString().Contains("System.Collections"))
+                    {
+                        foreach(var (node,text) in prop.GetValue(articlePair.Value) as Dictionary<string,string>)
+                        {
+                            if (type.ContainsKey("none"))
+                            {
+                                foreach (var i in type["none"])
+                                {
+                                    if (text.Contains(i) && (!searchInfo.node.Contains($"[{prop.Name}] {text}")))
+                                    {
+                                        searchInfo.node.Add($"[{prop.Name}] {text}");
+                                    }
+                                }
+                            }
+                            if (type.ContainsKey(prop.Name))
+                            {
+                                foreach (var i in type[prop.Name])
+                                {
+                                    if (text.Contains(i) && (!searchInfo.node.Contains($"[{prop.Name}] {text}")))
+                                    {
+                                        searchInfo.node.Add($"[{prop.Name}] {text}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        var text = prop.GetValue(articlePair.Value).ToString();
+                        if (type.ContainsKey("none"))
+                        {
+                            foreach (var i in type["none"])
+                            {
+                                if (text.Contains(i) && (!searchInfo.node.Contains($"[{prop.Name}] {text}")))
+                                {
+                                    searchInfo.node.Add($"[{prop.Name}] {text}");
+                                }
+                            }
+                        }
+                        if (type.ContainsKey(prop.Name))
+                        {
+                            foreach (var i in type[prop.Name])
+                            {
+                                if (text.Contains(i) && (!searchInfo.node.Contains($"[{prop.Name}] {text}")))
+                                {
+                                    searchInfo.node.Add($"[{prop.Name}] {text}");
+                                }
+                            }
+                        }
+                    }
+
+                }
+                if (searchInfo.node.Count==type.Count)
+                {
+                    res.Add(articlePair.Key, searchInfo);
+                }
+            }
+            return res;
         }
         public string base64x(string src)
         {

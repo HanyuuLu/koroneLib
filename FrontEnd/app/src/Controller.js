@@ -95,7 +95,7 @@ export function RESTsearch(src = "") {
 }
 export function RESTpreciseSearch(src) {
   axios
-    .get(`/api/precisesearch/`, { params: { src } })
+    .get(`/api/search/precise`, { params: { type: JSON.stringify(src) } })
     .then(function (response) {
       if (response.data !== "failure") {
         state.articleList = response.data;

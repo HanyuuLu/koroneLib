@@ -24,5 +24,13 @@ namespace KoroneServer
         {
             return KoroneServer.Instance.search(key,type);
         }
+
+        // GET api/<controller>/5
+        [HttpGet("precise")]
+        public IDictionary<string, SearchInfo> Get(string type)
+        {
+            return KoroneServer.Instance.preciseSearch(type);
+        }
+
     }
 }
