@@ -2,5 +2,4 @@
 bin
 Library
 obj
-Lib
-wwwroot
+Lib*
