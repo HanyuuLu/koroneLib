@@ -18,11 +18,25 @@ namespace KoroneServer
         public Dictionary<string, string> node { get; set; }
         public Article(string title)
         {
+            grade = "";
+            unit = "";
+            index = "";
+            subIndex = "";
             this.title = title;
+            author = "";
+            tag = "";
+            body = "";
         }
         public Article()
         {
-
+            grade = "";
+            unit = "";
+            index = "";
+            subIndex = "";
+            title = "";
+            author = "";
+            tag = "";
+            body = "";
         }
     }
     public class SearchInfo

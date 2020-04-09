@@ -175,17 +175,17 @@ namespace KoroneServer
                                 {
                                     foreach (var j in prop.GetValue(i.Value) as Dictionary<string, string>)
                                     {
-                                        if (j.Value.Contains(src))
+                                        if ((j.Value??"").Contains(src))
                                         {
-                                            item.node.Add($"[node] {j.Value}");
+                                            item.node.Add($"[node] {j.Value??""}");
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    if (prop.GetValue(i.Value).ToString().Contains(src))
+                                    if ((prop.GetValue(i.Value)??"").ToString().Contains(src))
                                     {
-                                        item.node.Add($"[{prop.Name}] {prop.GetValue(i.Value).ToString()}");
+                                        item.node.Add($"[{prop.Name}] {prop.GetValue(i.Value)??""}");
                                     }
                                 }
                             }
@@ -220,8 +220,9 @@ namespace KoroneServer
                 {
                     if (prop.PropertyType.ToString().Contains("System.Collections"))
                     {
-                        foreach(var (node,text) in prop.GetValue(articlePair.Value) as Dictionary<string,string>)
+                        foreach(var (node,rawText) in prop.GetValue(articlePair.Value) as Dictionary<string,string>)
                         {
+                            var text = rawText ?? "";
                             if (type.ContainsKey("none"))
                             {
                                 foreach (var i in type["none"])
@@ -247,7 +248,7 @@ namespace KoroneServer
                     else
                     {
 
-                        var text = prop.GetValue(articlePair.Value).ToString();
+                        var text = (prop.GetValue(articlePair.Value)??"").ToString();
                         if (type.ContainsKey("none"))
                         {
                             foreach (var i in type["none"])
