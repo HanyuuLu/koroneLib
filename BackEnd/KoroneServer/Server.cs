@@ -11,6 +11,8 @@ namespace KoroneServer
 {
     public class KoroneServer
     {
+        static String FILENAME_FILTER = "[\\/:*?\" <>|]+";
+        static Regex regex = new Regex(FILENAME_FILTER);
         private Dictionary<string, Article> CacheList;
         private string LibraryFolder;
         public static KoroneServer Instance { get; } = new KoroneServer();
@@ -289,7 +291,7 @@ namespace KoroneServer
         }
         public string genFilenmae(Article src)
         {
-            return $"{src.grade}-{src.unit}-{src.title}-{src.author}.json";
+            return $"{regex.Replace(src.title,"")}.json";
         }
         public string genArticleItemListHeader(Article src)
         {
