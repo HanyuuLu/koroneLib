@@ -6,16 +6,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
-namespace KoroneServer
+namespace KoroneLibrary
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Figgle.FiggleFonts.Standard.Render("Korone Server!"));
-            KoroneServer temp =  KoroneServer.Instance;
             CreateHostBuilder(args).Build().Run();
         }
 
