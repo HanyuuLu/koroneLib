@@ -20,6 +20,7 @@ namespace KoroneLibrary.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("visit index");
             return View();
         }
 

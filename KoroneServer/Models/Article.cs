@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
 namespace KoroneLibrary.Models
@@ -18,6 +19,8 @@ namespace KoroneLibrary.Models
         public string author { get; set; } = "";
         public string tag { get; set; } = "";
         public string body { get; set; } = "";
+
+        [NotMapped]
         public Dictionary<string, string> node { get; set; }
 
         public string FileName { get { return $"{regex.Replace(title, "")}.json"; ; } }

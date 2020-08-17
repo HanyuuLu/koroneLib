@@ -1,0 +1,73 @@
+﻿@model KoroneLibrary.Models.Article
+
+@{
+    ViewData["Title"] = "ArticleEdit";
+}
+
+<h1>ArticleEdit</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ArticleEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="grade" class="control-label"></label>
+                <input asp-for="grade" class="form-control" />
+                <span asp-validation-for="grade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="unit" class="control-label"></label>
+                <input asp-for="unit" class="form-control" />
+                <span asp-validation-for="unit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="index" class="control-label"></label>
+                <input asp-for="index" class="form-control" />
+                <span asp-validation-for="index" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="subIndex" class="control-label"></label>
+                <input asp-for="subIndex" class="form-control" />
+                <span asp-validation-for="subIndex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="title" class="control-label"></label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="author" class="control-label"></label>
+                <input asp-for="author" class="form-control" />
+                <span asp-validation-for="author" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="tag" class="control-label"></label>
+                <input asp-for="tag" class="form-control" />
+                <span asp-validation-for="tag" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="body" class="control-label"></label>
+                <input asp-for="body" class="form-control" />
+                <span asp-validation-for="body" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FileName" class="control-label"></label>
+                <input asp-for="FileName" class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
