@@ -23,12 +23,22 @@ namespace KoroneLibrary
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddHttpsRedirection(config =>
+            {
+                //https地址的端口号，默认null
+                config.HttpsPort = 5000;
+
+                //跳转响应的状态码，默认307
+                config.RedirectStatusCode = 307;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
+            app.UseHsts();
             app.UseHttpsRedirection();
 
             if (env.IsDevelopment())
