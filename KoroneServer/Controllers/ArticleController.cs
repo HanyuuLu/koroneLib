@@ -4,14 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace KoroneLibrary.Controllers
 {
     public class ArticleController : Controller
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         // GET: ArticleController
         public ActionResult Index()
         {
+            Logger.Info("index visited.");
             return View();
         }
 
