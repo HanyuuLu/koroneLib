@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
+using KoroneLibrary.Models;
+
 namespace KoroneLibrary.Controllers
 {
     public class ArticleController : Controller
@@ -16,13 +18,17 @@ namespace KoroneLibrary.Controllers
         public ActionResult Index()
         {
             Logger.Info("index visited.");
-            return View();
+            Article article = new Article();
+            article.author = "a";
+            article.body = "b";
+            article.title = "c";
+            return View(article);
         }
 
         // GET: ArticleController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View("Index");
         }
 
         // GET: ArticleController/Create
