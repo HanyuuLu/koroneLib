@@ -2,7 +2,66 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Korone Library</p>
+<div id="carouselExampleControls" class="carousel slide fixed-top" data-ride="carousel" style="width:100%;height:100%;z-index:-1">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/res/wallpaper.jpg" class="figure-img img-fluid" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/res/wallpaper0.jpg" class="figure-img img-fluid" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/res/wallpaper1.jpg" class="figure-img img-fluid" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/res/wallpaper2.jpg" class="figure-img img-fluid" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/res/wallpaper3.jpg" class="figure-img img-fluid" alt="...">
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div style="float:left;width:50%;margin:auto;margin-top:50px">
+        <h1 class="display-6">欢迎使用</h1>
+        <h1 class="display-6">文档检索系统</h1>
+        <h1 class="display-6">演示版（demo）</h1>
+        <p>v2.0.0-SNAPSHOT</p>
+    </div>
+
+    <div style="float:right;width:50%;align-content:center">
+        <div style="width: 350px;margin:auto;margin-top:50px;background-color:rgba(255,255,255,0.6)" class="jumbotron">
+            <form>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">账号</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">密码</span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="password" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">记住我</label>
+                </div>
+                <button style="width:100%" type="submit" class="btn btn-primary">登录</button>
+                <div class="alert alert-success" role="alert">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z" />
+                    </svg>
+                    演示版直接点击登录即可体验
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
