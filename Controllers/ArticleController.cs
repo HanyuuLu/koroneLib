@@ -103,7 +103,7 @@ namespace KoroneLibrary.Controllers
 
         public ActionResult Search()
         {
-            Search result = search.SearchDetails();
+            Search result = search.SearchDetailsMock();
             return View(result);
         }
     }

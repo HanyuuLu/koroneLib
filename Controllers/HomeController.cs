@@ -13,7 +13,7 @@ namespace KoroneLibrary.Controllers
     public class HomeController : Controller
     {
         // private readonly ILogger<HomeController> _logger;
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public HomeController()
         {
