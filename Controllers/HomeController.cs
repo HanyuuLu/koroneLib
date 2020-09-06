@@ -30,6 +30,13 @@ namespace KoroneLibrary.Controllers
             return View();
         }
 
+
+        public IActionResult Login()
+        {
+            Logger.Info("user logined.");
+            return Redirect("../Article/Search");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

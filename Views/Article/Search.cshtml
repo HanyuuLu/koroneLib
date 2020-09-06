@@ -1,0 +1,67 @@
+﻿@model KoroneLibrary.Models.Search;
+@{
+    ViewData["Title"] = "检索";
+}
+<div class="container">
+    <h1>文档检索</h1>
+    <div class="container-fluid">
+
+        <div class="input-group mr-3" style="margin-top:40px">
+            <input type="text" class="form-control" placeholder="请输入若干关键词并用空格隔开" aria-label="搜索" aria-describedby="button-addon4">
+            <div class="input-group-append" id="button-addon4">
+                <button class="btn btn-outline-secondary" type="button">搜索</button>
+            </div>
+        </div>
+        <p class="attribute" style="float:right"><a asp-controller="Home" asp-action="About">想要精确搜索?请参阅搜索帮助</a></p>
+    </div>
+</div>
+<table class="table table-hover">
+    <tr>
+        <td>
+            文档
+        </td>
+        <td>
+            匹配结果
+        </td>
+        <td>
+            操作
+        </td>
+    </tr>
+    @foreach (var item in Model.articleList)
+    {
+        <tr>
+            <td>
+                <h4>
+                    @item.title
+                </h4>
+                <p>@item.author - @item.tag - @item.grade</p>
+            </td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td>
+                            作者
+                        </td>
+                        <td>
+                            @item.author
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            正文
+                        </td>
+                        <td>
+                            @item.body
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <a asp-action="Index">查看</a>
+                <a asp-action="Index">删除</a>
+                <a asp-action="Index">修改</a>
+            </td>
+        </tr>
+    }
+</table>
+</div>

@@ -14,6 +14,13 @@ namespace KoroneLibrary.Controllers
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private Search search;
+
+        public ArticleController(Search search)
+        {
+            this.search = search;
+        }
+
         // GET: ArticleController
         public ActionResult Index()
         {
@@ -92,6 +99,12 @@ namespace KoroneLibrary.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult Search()
+        {
+            Search result = search.SearchDetails();
+            return View(result);
         }
     }
 }

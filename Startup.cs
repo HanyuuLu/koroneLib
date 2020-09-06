@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KoroneLibrary.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,14 +33,17 @@ namespace KoroneLibrary
                 //跳转响应的状态码，默认307
                 config.RedirectStatusCode = 307;
             });
+
+            services.AddSingleton<Search, Search>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseHsts();
             app.UseHttpsRedirection();
+
+            app.UseHsts();
 
             if (env.IsDevelopment())
             {
