@@ -1,10 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>2.0.0-SNAPSHOT</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Hanyuu Lu</Authors>
+    <Company>Hanyuu Lu's work studio</Company>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Copyright (c) 2020 Hanyuu Lu</Copyright>
+    <PackageProjectUrl>https://github.com/HanyuuLu/koroneLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HanyuuLu/koroneLib</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>KoroneLibKey.pfx</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <UserSecretsId>1cf19a6c-eeef-4ebb-987f-c7f1e5a4944f</UserSecretsId>
   </PropertyGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties properties_4launchsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
@@ -14,6 +32,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Nlog" Version="4.7.3" />
+    <PackageReference Include="Sentry.AspNetCore" Version="2.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

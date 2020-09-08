@@ -21,6 +21,7 @@ namespace KoroneLibrary
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSentry();
                 });
     }
 }

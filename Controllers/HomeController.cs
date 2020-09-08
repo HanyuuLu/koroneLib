@@ -19,9 +19,10 @@ namespace KoroneLibrary.Controllers
         {
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string message)
         {
             Logger.Info("index visited");
+            ViewData["message"] = message;
             return View();
         }
 
