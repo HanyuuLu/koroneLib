@@ -1,55 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace KoroneLibrary.Models
 {
     public class Search
     {
-        static Random random = new Random();
+        static readonly Random random = new Random();
         readonly DataServer dataServer;
         
         public Search(DataServer dataServer) { this.dataServer = dataServer; }
-        public List<Article> articleList;
         public Search() { }
+        
+        [Obsolete]
         public Search SearchDetailsMock(Dictionary<string, string> searchDict = null)
         {
             Search result = new Search();
-            result.articleList = new List<Article>();
+            var articleList = new List<Article>();
             int count = random.Next(1,100);
             for(var i = 0;i<count;++i)
             {
-                Article article = new Article();
-                article.author = $"示例作者{random.Next().ToString()}";
-                article.body = $"示例正文{random.Next().ToString()}";
-                article.title = $"示例标题{random.Next().ToString()}";
-                article.grade = $"示例年级{random.Next().ToString()}";
-                var dict = new Dictionary<string, string>();
-                dict.Add("N1", $"示例注释{random.Next().ToString()}");
-                article.node = dict;
-                article.tag = $"示例标签{random.Next().ToString()}";
-                result.articleList.Add(article);
+                Article article = new Article
+                {
+                    Author = $"示例作者{random.Next()}",
+                    Body = $"示例正文{random.Next()}",
+                    Title = $"示例标题{random.Next()}",
+                    Grade = $"示例年级{random.Next()}",
+                    Tag = $"示例标签{random.Next()}",
+                    Node = new Dictionary<string, string>
+                    {
+                        { "N1", $"示例注释{random.Next()}" }
+                    }
+                };
+                articleList.Add(article);
             }
             return result;
         }
 
-        public IDictionary<string,Article> search(string searchword)
+        public IList<Article> AdvancedSearch(string searchword)
         {
-            if (searchword==null)
+            if (string.IsNullOrEmpty(searchword))
             {
-                return dataServer.ArticleDictionary;
+                return dataServer.ArticleDictionary.Values.ToList();
             }
             else
             {
-                var res = new Dictionary<string, Article>();
+                var res = new List<Article>();
                 string[] searchList = searchword.Split(" ");
                 foreach (var i in dataServer.ArticleDictionary)
                 {
                     Article searchRes = new Article();
                     var propList = i.Value.GetType().GetProperties();
+                    bool selected = false;
                     foreach (var prop in propList)
                     {
+                        if (prop.Name == "Filepath" || prop.Name== "FileName")
+                        { continue; }
+                        // Collection类型，注解
                         if (prop.GetValue(i.Value) != null 
                             && prop.PropertyType.ToString().Contains("System.Collections"))
                         {
@@ -59,23 +68,39 @@ namespace KoroneLibrary.Models
                                 {
                                     if ((j.Value ?? "").Contains(key))
                                     {
-                                        if (searchRes.node == null) { searchRes.node = new Dictionary<string, string>(); }
-                                        searchRes.node.Add(j.Key, j.Value);
+                                        if (searchRes.Node == null) { searchRes.Node = new Dictionary<string, string>(); }
+                                        searchRes.Node.Add(j.Key, j.Value);
+                                        selected = true;
                                     }
                                 }
                             }
                         }
+                        // 一般类型，标题、作者等
                         else
                         {
                             foreach (var key in searchList)
                             {
                                 if ((prop.GetValue(i.Value) ?? "").ToString().Contains(key))
-                                { prop.SetValue(searchRes, prop.GetValue(i.Value)); }
+                                {
+                                    string resString = prop.GetValue(i.Value).ToString();
+                                    if (resString.Length > 64)
+                                    {
+                                        Regex regex = new Regex($"[^。?……！\\s]*{key}[^。?……！\\s]*");
+                                        var regRes = regex.Matches(prop.GetValue(i.Value).ToString());
+                                        resString =  string.Join('\n', regRes);
+                                    }
+                                    prop.SetValue(searchRes, resString);
+                                    selected = true;
+                                }
                             }
                         }
                     }
+                    if (selected)
+                    {
+                        searchRes.Title = i.Value.Title;
+                        res.Add(searchRes);
+                    }
                 }
-
                 return res;
             }
         }

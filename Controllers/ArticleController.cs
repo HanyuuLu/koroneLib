@@ -14,7 +14,7 @@ namespace KoroneLibrary.Controllers
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private Search search;
+        private readonly Search search;
 
         public ArticleController(Search search)
         {
@@ -25,10 +25,12 @@ namespace KoroneLibrary.Controllers
         public ActionResult Index()
         {
             Logger.Info("index visited.");
-            Article article = new Article();
-            article.author = "a";
-            article.body = "b";
-            article.title = "c";
+            Article article = new Article
+            {
+                Author = "a",
+                Body = "b",
+                Title = "c"
+            };
             return View(article);
         }
 
@@ -101,9 +103,13 @@ namespace KoroneLibrary.Controllers
             }
         }
 
-        public ActionResult Search()
+        public ActionResult Search(string searchword = null)
         {
-            Search result = search.SearchDetailsMock();
+            //Search result = search.SearchDetailsMock();
+            IList<Article> result = search.AdvancedSearch(searchword);
+            if (!string.IsNullOrEmpty(searchword))
+            { ViewData["Search"] = true; }
+            else { ViewData["Search"] = false; }
             return View(result);
         }
     }

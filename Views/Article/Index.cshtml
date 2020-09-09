@@ -12,7 +12,8 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            @*TODO:变更实现*@
+            @*<div class="form-group">
                 <label asp-for="title" class="control-label"></label>
                 <input asp-for="title" class="form-control" />
                 <span asp-validation-for="title" class="text-danger"></span>
@@ -51,7 +52,7 @@
                 <label asp-for="body" class="control-label"></label>
                 <input asp-for="body" class="form-control" />
                 <span asp-validation-for="body" class="text-danger"></span>
-            </div>
+            </div>*@
 
             <div class="form-group">
                 <input type="submit" value="保存" class="btn btn-primary" action="Home/Login" />

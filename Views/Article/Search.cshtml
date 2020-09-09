@@ -1,4 +1,4 @@
-﻿@model KoroneLibrary.Models.Search;
+﻿@model IList<KoroneLibrary.Models.Article>;
 @{
     ViewData["Title"] = "检索";
 }
@@ -14,54 +14,78 @@
         </div>
         <p class="attribute" style="float:right"><a asp-controller="Home" asp-action="About">想要精确搜索?请参阅搜索帮助</a></p>
     </div>
-</div>
-<table class="table table-hover">
-    <tr>
-        <td>
-            文档
-        </td>
-        <td>
-            匹配结果
-        </td>
-        <td>
-            操作
-        </td>
-    </tr>
-    @foreach (var item in Model.articleList)
-    {
+    <table class="table table-hover">
         <tr>
             <td>
-                <h4>
-                    @item.title
-                </h4>
-                <p>@item.author - @item.tag - @item.grade</p>
+                文档
             </td>
-            <td>
-                <table class="table">
-                    <tr>
-                        <td>
-                            作者
-                        </td>
-                        <td>
-                            @item.author
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            正文
-                        </td>
-                        <td>
-                            @item.body
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <a asp-action="Index">查看</a>
-                <a asp-action="Index">删除</a>
-                <a asp-action="Index">修改</a>
+            @if ((bool)ViewData["Search"] == true)
+            {
+                <td class="w-50">
+                    匹配结果
+                </td>
+            }
+            <td style="width:10em">
+                操作
             </td>
         </tr>
-    }
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <h4>
+                        @item.Title
+                    </h4>
+                    <p>@item.Author @item.Tag @item.Grade</p>
+                </td>
+                @if ((bool)ViewData["Search"] == true)
+                {
+                    <td>
+                        <table class="table table-sm">
+                            @if (!string.IsNullOrEmpty(item.Grade))
+                            {
+                                    <tr><td>年级</td><td>@item.Grade</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Unit))
+                            {
+                                    <tr><td>单元</td><td>@item.Unit</td></tr>   
+                            }
+                            @if (!string.IsNullOrEmpty(item.Index))
+                            {
+                                    <tr><td>课文号</td><td>@item.Index</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.SubIndex))
+                            {
+                                    <tr><td>子课文号</td><td>@item.SubIndex</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Author))
+                            {
+                                    <tr><td>作者</td><td>@item.Author</td></tr>   
+                            }
+                            @if (!string.IsNullOrEmpty(item.Tag))
+                            {
+                                    <tr><td>标签</td><td>@item.Tag</td></tr>   
+                            }
+                            @if (!string.IsNullOrEmpty(item.Body))
+                            {
+                                    <tr><td>正文</td><td>@item.Body</td></tr>
+                            }
+                            @if(item.Node != null)
+                            {
+                                foreach(var node in item.Node)
+                                {
+                                    <tr><td>@node.Key</td><td>@node.Value</td></tr>
+                                }
+                            }
+                        </table>
+                    </td>
+                }
+                <td style="width:10em">
+                    <a asp-action="Index">查看</a>
+                    <a asp-action="Index">删除</a>
+                    <a asp-action="Index">修改</a>
+                </td>
+            </tr>
+        }
+    </table>
 </div>

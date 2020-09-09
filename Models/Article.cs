@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace KoroneLibrary.Models
@@ -8,21 +10,25 @@ namespace KoroneLibrary.Models
     public class Article
     {
 
-        private static String FILENAME_FILTER = "[\\/:*?\" <>|]+";
-        private static Regex regex = new Regex(FILENAME_FILTER);
+        private static readonly string FILENAME_FILTER = "[\\/:*?\" <>|]+";
+        private static readonly Regex regex = new Regex(FILENAME_FILTER);
 
-        public string grade { get; set; } = "";
-        public string unit { get; set; } = "";
-        public string index { get; set; } = "";
-        public string subIndex { get; set; } = "";
-        public string title { get; set; } = "";
-        public string author { get; set; } = "";
-        public string tag { get; set; } = "";
-        public string body { get; set; } = "";
+        public string Uuid { get; set; }
+        public string Grade { get; set; } = "";
+        public string Unit { get; set; } = "";
+        public string Index { get; set; } = "";
+        public string SubIndex { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Author { get; set; } = "";
+        public string Tag { get; set; } = "";
+        public string Body { get; set; } = "";
 
         [NotMapped]
-        public Dictionary<string, string> node { get; set; }
+        public Dictionary<string, string> Node { get; set; }
 
-        public string FileName { get { return $"{regex.Replace(title, "")}.json"; ; } }
+        [JsonIgnore]
+        public string Filepath { get; set; }
+
+        public string FileName { get { return $"{regex.Replace(Title, "")}.json"; ; } }
     }
 }
