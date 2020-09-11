@@ -9,7 +9,6 @@ namespace KoroneLibrary.Models
 {
     public class Article
     {
-
         private static readonly string FILENAME_FILTER = "[\\/:*?\" <>|]+";
         private static readonly Regex regex = new Regex(FILENAME_FILTER);
 

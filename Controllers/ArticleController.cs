@@ -7,30 +7,29 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 using KoroneLibrary.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace KoroneLibrary.Controllers
 {
     public class ArticleController : Controller
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly DataServer dataServer;
 
         private readonly Search search;
 
-        public ArticleController(Search search)
+        public ArticleController(DataServer dataServer, Search search)
         {
+            this.dataServer = dataServer;
             this.search = search;
         }
 
         // GET: ArticleController
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
-            Logger.Info("index visited.");
-            Article article = new Article
-            {
-                Author = "a",
-                Body = "b",
-                Title = "c"
-            };
+            if (string.IsNullOrEmpty(id)) { return View(new Article()); }
+            Article article = dataServer.GetArticle(id);
+            Logger.Info($"Article {article.Title} visited, with uuid {article.Uuid}");
             return View(article);
         }
 
@@ -105,8 +104,8 @@ namespace KoroneLibrary.Controllers
 
         public ActionResult Search(string searchword = null)
         {
-            //Search result = search.SearchDetailsMock();
             IList<Article> result = search.AdvancedSearch(searchword);
+            Logger.Info($"search {searchword},{result.Count} results found");
             if (!string.IsNullOrEmpty(searchword))
             { ViewData["Search"] = true; }
             else { ViewData["Search"] = false; }

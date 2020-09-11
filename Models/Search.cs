@@ -98,6 +98,7 @@ namespace KoroneLibrary.Models
                     if (selected)
                     {
                         searchRes.Title = i.Value.Title;
+                        searchRes.Uuid = i.Value.Uuid;
                         res.Add(searchRes);
                     }
                 }
