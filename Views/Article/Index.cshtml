@@ -1,11 +1,48 @@
 ﻿@model KoroneLibrary.Models.Article
 
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/article/article-read.css" />
+</head>
+
 @{
     ViewData["Title"] = "编辑";
 }
 <h4>@Model.Title @Model.Author</h4>
 <hr />
-<div class="row">
+<div class="container">
+    <div class="body-paper">
+        <div class="triangle"></div>
+        <div class="container">
+            <div class="h4 text-center">
+                @Model.Title
+            </div>
+            <div class="p-1 text-right">
+                @Model.Author
+            </div>
+            <div class="p-1 text-info text-right">
+                @Model.Grade-@Model.Unit<br />
+                @Model.Tag
+            </div>
+            <div class="text-body">
+                @Model.Body
+            </div>
+
+        </div>
+    </div>
+    <hr />
+    <div class="node">
+        <ul class="list-group list-group-flush">
+            @if (Model.Node != null)
+            {
+                @foreach (var item in Model.Node)
+                {
+                    <li class="list-group-item">[@item.Key] @item.Value</li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+<!--<div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -51,14 +88,15 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="保存" class="btn btn-primary" @*action="Home/Login"*@ />
+                <input type="submit" value="保存" class="btn btn-primary"-->
+@*action="Home/Login"*@
+<!--/>
             </div>
         </form>
     </div>
-</div>
-
+</div>-->
 @* <div>
-</div> *@
+    </div> *@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

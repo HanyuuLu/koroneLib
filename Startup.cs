@@ -28,7 +28,7 @@ namespace KoroneLibrary
             services.AddHttpsRedirection(config =>
             {
                 //https地址的端口号，默认null
-                config.HttpsPort = 5000;
+                config.HttpsPort = null;
 
                 //跳转响应的状态码，默认307
                 config.RedirectStatusCode = 307;

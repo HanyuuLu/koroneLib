@@ -1,0 +1,21 @@
+﻿body {
+}
+
+.body-paper {
+    /*background: rgb(218,201,166);*/
+    background: #ddeeee;
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+.triangle {
+    content: "";
+    top: 0%;
+    left: 0%;
+    width: 0px;
+    height: 0px;
+    border-bottom: 50px solid rgba(0,0,0,0.1);
+    border-left: 50px solid white;
+    border-bottom-right-radius:5px;
+    box-shadow: 7px 7px 7px rgba(0,0,0,0.3);
+}
