@@ -27,10 +27,24 @@ namespace KoroneLibrary.Controllers
         // GET: ArticleController
         public ActionResult Index(string id)
         {
-            if (string.IsNullOrEmpty(id)) { return View(new Article()); }
-            Article article = dataServer.GetArticle(id);
-            Logger.Info($"Article {article.Title} visited, with uuid {article.Uuid}");
-            return View(article);
+            try
+            {
+                if (string.IsNullOrEmpty(id)) { throw new Exception("未指定文档uuid"); }
+                Article article = dataServer.GetArticle(id);
+                Logger.Info($"Article {article.Title} visited, with uuid {article.Uuid}");
+                return View(article);
+            }
+            catch (Exception e)
+            {
+                Article article = new Article();
+                article.Title = "Oops! 该文档不存在";
+                article.Body = $"该文档可能已被他人删除、移动，被不规范地导入，也可能是系统故障。请尝试重新搜索并访问这个文档，如果所有文档都不可访问，请在“关于”页面查看帮助或联系系统管理员和开发者。";
+                article.Node = new Dictionary<string, string>();
+                article.Node.Add("错误信息", e.Message);
+                article.Node.Add("错误堆栈", e.StackTrace);
+                Logger.Error($"{e.Message}\n{e.StackTrace}");
+                return View(article);
+            }
         }
 
         // GET: ArticleController/Details/5

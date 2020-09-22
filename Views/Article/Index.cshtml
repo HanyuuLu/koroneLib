@@ -42,10 +42,12 @@
             </div>
 
             <hr />
+            @if(Model.Node!=null)
+            {
             <table class="node table table-striped font-weight-light">
                 <thead>
                     <tr>
-                        <th>注解</th>
+                        <th>注释</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,9 +62,9 @@
                     }
                 </tbody>
             </table>
+            }
         </div>
     </div>
-
 </div>
 
 @section Scripts {
