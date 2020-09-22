@@ -12,7 +12,6 @@
     var BreadCrumbDict = new List<string>();
     BreadCrumbDict.Add($"{Model.Grade}");
     BreadCrumbDict.Add($"{Model.Unit}");
-    BreadCrumbDict.Add($"{Model.Author}");
     var tagList = Model.Tag.Split(",;.");
     foreach (var item in tagList)
     {
@@ -34,13 +33,11 @@
             <div class="h4 text-center">
                 @Model.Title
             </div>
-            <div class="p-1 text-right">
+            <div class="p-1 text-center">
                 @Model.Author
             </div>
-            <div class="p-1 text-info text-right">
-                @Model.Grade-@Model.Unit
             </div>
-            <div class="text-body">
+            <div id="bodybox" class="text-body">
                 @Model.Body
             </div>
 
