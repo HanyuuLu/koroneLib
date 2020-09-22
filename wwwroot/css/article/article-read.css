@@ -1,6 +1,11 @@
 ﻿body {
 }
 
+.bread-crumb{
+    font-size:12pt;
+
+}
+
 .body-paper {
     /*background: rgb(218,201,166);*/
     background: #ddeeee;

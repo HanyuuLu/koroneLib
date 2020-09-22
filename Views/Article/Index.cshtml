@@ -4,15 +4,33 @@
     <link rel="stylesheet" type="text/css" href="~/css/article/article-read.css" />
 </head>
 
+
 @{
     ViewData["Title"] = "编辑";
 }
-<h4>@Model.Title @Model.Author</h4>
-<hr />
+@{
+    var BreadCrumbDict = new List<string>();
+    BreadCrumbDict.Add($"{Model.Grade}");
+    BreadCrumbDict.Add($"{Model.Unit}");
+    BreadCrumbDict.Add($"{Model.Author}");
+    var tagList = Model.Tag.Split(",;.");
+    foreach (var item in tagList)
+    {
+        BreadCrumbDict.Add(item);
+    }
+}
+
 <div class="container">
     <div class="body-paper">
         <div class="triangle"></div>
         <div class="container">
+            <div class="bread-crumb float-right">
+                @{ foreach (var item in BreadCrumbDict)
+                    {
+                        <a class="badge badge-secondary" href="/Article/Search/?searchword=@item">@item</a>
+                    }
+                }
+            </div>
             <div class="h4 text-center">
                 @Model.Title
             </div>
@@ -20,83 +38,35 @@
                 @Model.Author
             </div>
             <div class="p-1 text-info text-right">
-                @Model.Grade-@Model.Unit<br />
-                @Model.Tag
+                @Model.Grade-@Model.Unit
             </div>
             <div class="text-body">
                 @Model.Body
             </div>
 
+            <hr />
+            <table class="node table table-striped font-weight-light">
+                <thead>
+                    <tr>
+                        <th>注解</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Node != null)
+                    {
+                        @foreach (var item in Model.Node)
+                        {
+                            <tr>
+                                <th>[@item.Key] @item.Value</th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-    <hr />
-    <div class="node">
-        <ul class="list-group list-group-flush">
-            @if (Model.Node != null)
-            {
-                @foreach (var item in Model.Node)
-                {
-                    <li class="list-group-item">[@item.Key] @item.Value</li>
-                }
-            }
-        </ul>
-    </div>
-</div>
-<!--<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Grade" class="control-label"></label>
-                <input asp-for="Grade" class="form-control" />
-                <span asp-validation-for="Grade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Unit" class="control-label"></label>
-                <input asp-for="Unit" class="form-control" />
-                <span asp-validation-for="Unit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Index" class="control-label"></label>
-                <input asp-for="Index" class="form-control" />
-                <span asp-validation-for="Index" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubIndex" class="control-label"></label>
-                <input asp-for="SubIndex" class="form-control" />
-                <span asp-validation-for="SubIndex" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tag" class="control-label"></label>
-                <input asp-for="Tag" class="form-control" />
-                <span asp-validation-for="Tag" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Body" class="control-label"></label>
-                <input asp-for="Body" class="form-control" />
-                <span asp-validation-for="Body" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <input type="submit" value="保存" class="btn btn-primary"-->
-@*action="Home/Login"*@
-<!--/>
-            </div>
-        </form>
-    </div>
-</div>-->
-@* <div>
-    </div> *@
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
