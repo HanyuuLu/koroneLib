@@ -9,59 +9,74 @@
     ViewData["Title"] = "编辑";
 }
 @{
+    var editable = false;
+    if (ViewData["editable"] != null && (bool)ViewData["editbale"] == true)
+        editable = true;
     var BreadCrumbDict = new List<string>();
     BreadCrumbDict.Add($"{Model.Grade}");
     BreadCrumbDict.Add($"{Model.Unit}");
     var tagList = Model.Tag.Split(",;.");
+
     foreach (var item in tagList)
     {
         BreadCrumbDict.Add(item);
     }
 }
+@functions{
+    public void addTag(String src)
+    {
+        var tagList = (List<String>)ViewData["tagList"];
+    }
+}
 
 <div class="container">
     <div class="body-paper">
+
+        <div class="bread-crumb float-right m-2">
+            @if (editable)
+            {
+                <input id="tagEditBox" type="text"  onchange=""/>
+            }
+            @{ foreach (var item in BreadCrumbDict)
+                {
+                    <a class="badge badge-secondary" href="/Article/Search/?searchword=@item">@item</a>
+                }
+            }
+        </div>
         <div class="triangle"></div>
         <div class="container">
-            <div class="bread-crumb float-right">
-                @{ foreach (var item in BreadCrumbDict)
-                    {
-                        <a class="badge badge-secondary" href="/Article/Search/?searchword=@item">@item</a>
-                    }
-                }
-            </div>
             <div class="h4 text-center">
                 @Model.Title
             </div>
             <div class="p-1 text-center">
-                @Model.Author
+                <a href="/Article/Search/?searchword=@Model.Author" class="lead">@Model.Author</a>
             </div>
-            </div>
+
             <div id="bodybox" class="text-body">
-                @Model.Body
+                @Html.DisplayFor(Modle => Model.Body)
             </div>
 
             <hr />
-            @if(Model.Node!=null)
+            @if (Model.Node != null)
             {
-            <table class="node table table-striped font-weight-light">
-                <thead>
-                    <tr>
-                        <th>注释</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Node != null)
-                    {
-                        @foreach (var item in Model.Node)
+                <table class="node table table-striped font-weight-light">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-light">注释</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Node != null)
                         {
-                            <tr>
-                                <th>[@item.Key] @item.Value</th>
-                            </tr>
+                            @foreach (var item in Model.Node)
+                            {
+                                <tr>
+                                    <th class="font-weight-light">[@item.Key] @item.Value</th>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             }
         </div>
     </div>

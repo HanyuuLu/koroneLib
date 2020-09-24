@@ -8,6 +8,7 @@ using NLog;
 
 using KoroneLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KoroneLibrary.Controllers
 {
@@ -116,6 +117,7 @@ namespace KoroneLibrary.Controllers
             }
         }
 
+        [Authorize]
         public ActionResult Search(string searchword = null)
         {
             IList<Article> result = search.AdvancedSearch(searchword);
