@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4;
+using IdentityServer4.Models;
 using KoroneLibrary.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +26,27 @@ namespace KoroneLibrary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthorization();
+
+            services.AddIdentityServer()
+            .AddDeveloperSigningCredential();
+
+            //services.AddAuthorization();
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+                    options.ClientId = "mvc";
+                    options.SaveTokens = true;
+                });
 
             services.AddControllersWithViews();
 
@@ -60,7 +83,12 @@ namespace KoroneLibrary
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
+            app.UseDeveloperExceptionPage();
+
+            app.UseAuthentication();
+
+            app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>
             {
@@ -68,6 +96,44 @@ namespace KoroneLibrary
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
+            };
+        }
+
+        public static IEnumerable<Client> GetClients()
+        {
+            return new List<Client>
+            {
+                new Client
+                {
+                    ClientId="mvc",
+                    ClientName="mvc clinet",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+
+                    RedirectUris =
+                    {
+                        "https://localhost"
+                    },
+
+                    PostLogoutRedirectUris =
+                    {
+                        "https://localhost"
+                    },
+
+                    AllowedScopes = new List<String>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
+                }
+            };
         }
     }
 }

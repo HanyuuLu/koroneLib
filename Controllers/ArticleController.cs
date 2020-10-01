@@ -25,6 +25,7 @@ namespace KoroneLibrary.Controllers
             this.search = search;
         }
 
+        [Authorize]
         // GET: ArticleController
         public ActionResult Index(string id)
         {
@@ -37,10 +38,12 @@ namespace KoroneLibrary.Controllers
             }
             catch (Exception e)
             {
-                Article article = new Article();
-                article.Title = "Oops! 该文档不存在";
-                article.Body = $"该文档可能已被他人删除、移动，被不规范地导入，也可能是系统故障。请尝试重新搜索并访问这个文档，如果所有文档都不可访问，请在“关于”页面查看帮助或联系系统管理员和开发者。";
-                article.Node = new Dictionary<string, string>();
+                Article article = new Article
+                {
+                    Title = "Oops! 该文档不存在",
+                    Body = $"该文档可能已被他人删除、移动，被不规范地导入，也可能是系统故障。请尝试重新搜索并访问这个文档，如果所有文档都不可访问，请在“关于”页面查看帮助或联系系统管理员和开发者。",
+                    Node = new Dictionary<string, string>()
+                };
                 article.Node.Add("错误信息", e.Message);
                 article.Node.Add("错误堆栈", e.StackTrace);
                 Logger.Error($"{e.Message}\n{e.StackTrace}");
@@ -117,7 +120,6 @@ namespace KoroneLibrary.Controllers
             }
         }
 
-        [Authorize]
         public ActionResult Search(string searchword = null)
         {
             IList<Article> result = search.AdvancedSearch(searchword);
