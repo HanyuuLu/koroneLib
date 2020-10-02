@@ -26,13 +26,13 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="Nlog" Version="4.7.3" />
+    <PackageReference Include="Nlog" Version="4.7.5" />
     <PackageReference Include="Sentry.AspNetCore" Version="2.1.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 using KoroneLibrary.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace KoroneLibrary
 {
@@ -28,6 +30,10 @@ namespace KoroneLibrary
         {
 
             services.AddIdentityServer()
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddTestUsers(TestUsers.Users)
             .AddDeveloperSigningCredential();
 
             //services.AddAuthorization();
@@ -42,10 +48,21 @@ namespace KoroneLibrary
                 .AddCookie("Cookies")
                 .AddOpenIdConnect("oidc", options =>
                 {
-                    options.Authority = "http://localhost:5000";
-                    options.RequireHttpsMetadata = false;
-                    options.ClientId = "mvc";
+
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
                     options.SaveTokens = true;
+
+                    options.Authority = "https://localhost";
+                    options.ClientId = "interactive.confidential";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
                 });
 
             services.AddControllersWithViews();
@@ -84,11 +101,15 @@ namespace KoroneLibrary
             app.UseRouting();
 
             //app.UseAuthorization();
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
+
+            //app.UseAuthentication();
+
+            app.UseIdentityServer();
 
             app.UseAuthentication();
 
-            app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -98,42 +119,5 @@ namespace KoroneLibrary
             });
         }
 
-        public static IEnumerable<IdentityResource> GetIdentityResources()
-        {
-            return new List<IdentityResource>
-            {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
-            };
-        }
-
-        public static IEnumerable<Client> GetClients()
-        {
-            return new List<Client>
-            {
-                new Client
-                {
-                    ClientId="mvc",
-                    ClientName="mvc clinet",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-
-                    RedirectUris =
-                    {
-                        "https://localhost"
-                    },
-
-                    PostLogoutRedirectUris =
-                    {
-                        "https://localhost"
-                    },
-
-                    AllowedScopes = new List<String>
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    }
-                }
-            };
-        }
     }
 }

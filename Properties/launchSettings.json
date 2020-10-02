@@ -20,7 +20,6 @@
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORT": "443",
         "ASPNETCORE_ENVIRONMENT": "Development"
-      //}
       },
       "applicationUrl": "https://localhost:443"
     }
