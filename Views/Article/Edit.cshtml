@@ -6,7 +6,7 @@
 
 
 @{
-    ViewData["Title"] = Model.Title??"";
+    ViewData["Title"] = $"编辑:{Model.Title??""}";
 }
 @{
     var BreadCrumbDict = new List<string>();
@@ -19,28 +19,24 @@
         BreadCrumbDict.Add(item);
     }
 }
-<a class="btn btn-primary" href="@Url.Action("Edit",new { id = Model.Uuid })">编辑</a>
+
 <div class="container">
-    <div class="body-paper">
+    <form class="body-paper">
 
         <div class="bread-crumb float-right m-2">
-            @{ foreach (var item in BreadCrumbDict)
-                {
-                    <a class="badge badge-secondary" href="/Article/Search/?searchword=@item">@item</a>
-                }
-            }
+            <input type="text" class="p1 underline-box" placeholder="标签，用英文分号(;)隔开" value="@Model.Tag"/>
         </div>
         <div class="triangle"></div>
         <div class="container">
             <div class="h4 text-center">
-                @Model.Title
+                <input class="h4 text-center underline-box" type="text" placeholder="标题" value="@Model.Title"/>
             </div>
             <div class="p-1 text-center">
-                <a href="/Article/Search/?searchword=@Model.Author" class="lead">@Model.Author</a>
+                <input class="p1 text-center underline-box" type="text" placeholder="作者" value="@Model.Author" />
             </div>
 
             <div id="bodybox" class="text-body">
-                @Html.DisplayFor(Modle => Model.Body)
+                <textarea class="form-control-lg underline-box" style="width:100%;height:500px" placeholder="正文">@Model.Body</textarea>
             </div>
 
             <hr />
@@ -58,17 +54,27 @@
                             @foreach (var item in Model.Node)
                             {
                                 <tr>
-                                    <th class="font-weight-light">[@item.Key] @item.Value</th>
+                                    <td class="w-25">
+                                        <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="引用" value="@item.Key" />
+                                    </td>
+                                    <td class="w-75">
+                                        <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="注释" value="@item.Value" />
+                                    </td>
+                                    <td>
+                                        <input type="button" value="x"/>
+                                    </td>
                                 </tr>
                             }
                         }
                     </tbody>
+                    <input type="button" name="addButton" value="新增一条注释")"/>    
                 </table>
+
             }
         </div>
-    </div>
+    </form>
 </div>
 
 @*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

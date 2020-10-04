@@ -27,3 +27,8 @@
 #bodybox{
     line-height:2em;
 }
+
+.underline-box{
+    border-width:0 0 1px 0;
+    background-color:transparent;
+}

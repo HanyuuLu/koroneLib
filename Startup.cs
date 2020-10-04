@@ -37,8 +37,9 @@ namespace KoroneLibrary
             .AddDeveloperSigningCredential();
 
             //services.AddAuthorization();
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
             {
@@ -53,8 +54,8 @@ namespace KoroneLibrary
                     options.SignOutScheme = IdentityServerConstants.SignoutScheme;
                     options.SaveTokens = true;
 
-                    options.Authority = "https://localhost";
-                    options.ClientId = "interactive.confidential";
+                    options.Authority = "https://localhost:5001";
+                    options.ClientId = "korone";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
 
@@ -118,6 +119,5 @@ namespace KoroneLibrary
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-
     }
 }

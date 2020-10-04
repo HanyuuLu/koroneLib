@@ -37,7 +37,7 @@ namespace KoroneLibrary
                 // interactive ASP.NET Core MVC client
                 new Client
                 {
-                    ClientId = "mvc",
+                    ClientId = "korone",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
                     AllowedGrantTypes = GrantTypes.Code,
