@@ -6,7 +6,7 @@
 
 
 @{
-    ViewData["Title"] = $"编辑:{Model.Title??""}";
+    ViewData["Title"] = $"编辑:{Model.Title ?? ""}";
 }
 @{
     var BreadCrumbDict = new List<string>();
@@ -21,15 +21,15 @@
 }
 
 <div class="container">
-    <form class="body-paper">
+    <form class="body-paper" method="post" asp-action="">
 
         <div class="bread-crumb float-right m-2">
-            <input type="text" class="p1 underline-box" placeholder="标签，用英文分号(;)隔开" value="@Model.Tag"/>
+            <input type="text" class="p1 underline-box" placeholder="标签，用英文分号(;)隔开" value="@Model.Tag" />
         </div>
         <div class="triangle"></div>
         <div class="container">
             <div class="h4 text-center">
-                <input class="h4 text-center underline-box" type="text" placeholder="标题" value="@Model.Title"/>
+                <input class="h4 text-center underline-box" type="text" placeholder="标题" value="@Model.Title" />
             </div>
             <div class="p-1 text-center">
                 <input class="p1 text-center underline-box" type="text" placeholder="作者" value="@Model.Author" />
@@ -61,16 +61,16 @@
                                         <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="注释" value="@item.Value" />
                                     </td>
                                     <td>
-                                        <input type="button" value="x"/>
+                                        <input type="button" value="x" />
                                     </td>
                                 </tr>
                             }
                         }
                     </tbody>
-                    <input type="button" name="addButton" value="新增一条注释")"/>    
                 </table>
+                <input type="button" name="addButton" value="新增一条注释" />
 
-            }
+             }
         </div>
     </form>
 </div>

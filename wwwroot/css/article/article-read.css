@@ -1,8 +1,8 @@
 ﻿body {
 }
 
-.bread-crumb{
-    font-size:12pt;
+.bread-crumb {
+    font-size: 12pt;
 }
 
 .body-paper {
@@ -20,15 +20,17 @@
     height: 0px;
     border-bottom: 50px solid rgba(0,0,0,0.1);
     border-left: 50px solid white;
-    border-bottom-right-radius:5px;
+    border-bottom-right-radius: 5px;
     box-shadow: 7px 7px 7px rgba(0,0,0,0.3);
 }
 
-#bodybox{
-    line-height:2em;
+#bodybox {
+    line-height: 2em;
 }
 
-.underline-box{
-    border-width:0 0 1px 0;
-    background-color:transparent;
+.underline-box {
+    border-style: solid;
+    border-color: black;
+    border-width: 0 0 1px 0;
+    background-color: transparent;
 }
