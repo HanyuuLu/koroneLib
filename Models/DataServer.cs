@@ -97,7 +97,7 @@ namespace KoroneLibrary.Models
         {
             if (!string.IsNullOrEmpty(article.Uuid))
             {
-                if (ArticleDictionary.ContainsKey(article.Uuid) && article.Title != ArticleDictionary[article.Title].Title)
+                if (ArticleDictionary.ContainsKey(article.Uuid) && article.Title != ArticleDictionary[article.Uuid].Title)
                 { Delete(ArticleDictionary[article.Title]); }
             }
             else

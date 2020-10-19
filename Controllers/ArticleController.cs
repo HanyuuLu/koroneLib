@@ -51,12 +51,6 @@ namespace KoroneLibrary.Controllers
             }
         }
 
-        // GET: ArticleController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View("Index");
-        }
-
         // GET: ArticleController/Create
         public ActionResult Create()
         {
@@ -99,23 +93,25 @@ namespace KoroneLibrary.Controllers
                 article.Node.Add("错误信息", e.Message);
                 article.Node.Add("错误堆栈", e.StackTrace);
                 Logger.Error($"{e.Message}\n{e.StackTrace}");
-                return View(article);
+                return RedirectToAction(nameof(Index));
             }
         }
 
         // POST: ArticleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Article article)
         {
+            Logger.Info(article);
             try
+            {
+                dataServer.Update(article);
+            }
+            catch(Exception e)
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index),new { id = article.Uuid });
         }
 
         // GET: ArticleController/Delete/5

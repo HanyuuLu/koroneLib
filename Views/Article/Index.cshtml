@@ -12,11 +12,14 @@
     var BreadCrumbDict = new List<string>();
     BreadCrumbDict.Add($"{Model.Grade}");
     BreadCrumbDict.Add($"{Model.Unit}");
-    var tagList = Model.Tag.Split(",;.");
-
-    foreach (var item in tagList)
+    if (!String.IsNullOrEmpty(Model.Tag))
     {
-        BreadCrumbDict.Add(item);
+        var tagList = Model.Tag.Split(",;.");
+
+        foreach (var item in tagList)
+        {
+            BreadCrumbDict.Add(item);
+        }
     }
 }
 <a class="btn btn-primary" href="@Url.Action("Edit",new { id = Model.Uuid })">编辑</a>
