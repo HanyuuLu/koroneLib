@@ -1,27 +1,16 @@
 {
   "iisSettings": {
     "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:54920",
-      "sslPort": 0
-    }
+    "anonymousAuthentication": true
   },
   "profiles": {
-    //"IIS Express": {
-    //  "commandName": "IISExpress",
-    //  "launchBrowser": true,
-    //  "environmentVariables": {
-    //    "ASPNETCORE_ENVIRONMENT": "Development"
-    //  }
-    //},
     "KoroneLibrary": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_HTTPS_PORT": "443",
+        "ASPNETCORE_HTTPS_PORT": "4430",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:443"
+      "applicationUrl": "https://localhost:4430"
     }
   }
 }

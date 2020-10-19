@@ -14,23 +14,22 @@
     BreadCrumbDict.Add($"{Model.Unit}");
     if (!String.IsNullOrEmpty(Model.Tag))
     {
-        var tagList = Model.Tag.Split(",;.");
-
+        var tagList = Model.Tag.Split("；");
+        Console.WriteLine(Model.Tag);
         foreach (var item in tagList)
         {
             BreadCrumbDict.Add(item);
+            Console.WriteLine(item);
         }
     }
 }
-<a class="btn btn-primary" href="@Url.Action("Edit",new { id = Model.Uuid })">编辑</a>
 <div class="container">
     <div class="body-paper">
 
         <div class="bread-crumb float-right m-2">
             @{ foreach (var item in BreadCrumbDict)
-                {
-                    <a class="badge badge-secondary" href="/Article/Search/?searchword=@item">@item</a>
-                }
+                {<a class="badge badge-secondary" href="@Url.Action("Search",new{searchword=@item})">@item</a>
+            }
             }
         </div>
         <div class="triangle"></div>
@@ -69,9 +68,6 @@
                 </table>
             }
         </div>
+        <a class="btn btn-primary float-right" href="@Url.Action("Edit",new { id = Model.Uuid })">编辑</a>
     </div>
 </div>
-
-@*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@

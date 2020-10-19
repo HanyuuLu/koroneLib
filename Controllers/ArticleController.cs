@@ -54,7 +54,8 @@ namespace KoroneLibrary.Controllers
         // GET: ArticleController/Create
         public ActionResult Create()
         {
-            return View();
+            Article newDoc = new Article();
+            return View(newDoc);
         }
 
         // POST: ArticleController/Create

@@ -6,7 +6,7 @@
 
 
 @{
-    ViewData["Title"] = $"编辑-{((Model == null) ? "" : Model.Title)}";
+    ViewData["Title"] = "新建文档";
 }
 @{
     var BreadCrumbDict = new List<string>();
@@ -28,7 +28,7 @@
     <form class="body-paper" method="post" asp-action="Edit">
 
         <div class="bread-crumb float-right m-2">
-            <input type="text" class="p1 underline-box" placeholder="标签，用分号；隔开" asp-for="Tag" />
+            <input type="text" class="p1 underline-box" placeholder="标签，用英文分号(;)隔开" asp-for="Tag" />
         </div>
         <div class="triangle"></div>
         <div class="container">
@@ -69,12 +69,10 @@
                             </tr>
                         }
                     }
-                    <div class="container">
-                        <input type="button" class="btn btn-primary float-right" name="addButton" value="新增一条注释" />
-                        <input type="submit" class="btn btn-success float-right" name="save" value="保存" />
-                    </div>
                 </tbody>
             </table>
+            <input type="button" class="btn btn-primary" name="addButton" value="新增一条注释" />
+            <input type="submit" class="btn btn-success" name="save" value="保存" />
         </div>
     </form>
 </div>
