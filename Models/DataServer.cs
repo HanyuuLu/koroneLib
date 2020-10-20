@@ -66,6 +66,8 @@ namespace KoroneLibrary.Models
         }
         public void Save(Article article)
         {
+            //temp
+            //
             if (string.IsNullOrEmpty(article.Uuid))
             { article.Uuid = Guid.NewGuid().ToString(); }
             if (string.IsNullOrEmpty(article.Filepath))
@@ -98,7 +100,7 @@ namespace KoroneLibrary.Models
             if (!string.IsNullOrEmpty(article.Uuid))
             {
                 if (ArticleDictionary.ContainsKey(article.Uuid) && article.Title != ArticleDictionary[article.Uuid].Title)
-                { Delete(ArticleDictionary[article.Title]); }
+                { Delete(ArticleDictionary[article.Uuid]); }
             }
             else
             { article.Uuid = Guid.NewGuid().ToString(); }

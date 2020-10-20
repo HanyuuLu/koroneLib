@@ -103,6 +103,11 @@ namespace KoroneLibrary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Article article)
         {
+            //
+            article.Node = new Dictionary<string, string>();
+            article.Node.Add("keykey", "valval");
+            article.Node.Add("KEY_KEY", "VALVAL");
+            //
             Logger.Info(article);
             try
             {
