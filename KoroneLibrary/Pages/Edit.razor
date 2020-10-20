@@ -1,8 +1,10 @@
 ﻿@page "/Edit/{uuid}"
 @page "/Edit"
+@page "/Create"
 
 @using KoroneLibrary.Data;
 @inject KoroneLibrary.Data.DataService dataService;
+@inject NavigationManager NavigationManager;
 
 @{
     init();
@@ -42,14 +44,14 @@
                 <tbody>
                     @if (Model.Node != null)
                     {
-                        @for (var i = 0; i < Model.Node.Count; ++i)
+                        @foreach(Pair<string,string> item in Model.Node)
                         {
                             <tr>
                                 <td class="w-25">
-                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="引用" />
+                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="引用" @bind="item.Key"/>
                                 </td>
                                 <td class="w-75">
-                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="注释" />
+                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="注释" @bind="item.Value" />
                                 </td>
                                 <td>
                                     <input type="button" class="btn btn-light" value="x" />
@@ -62,18 +64,8 @@
             </table>
         </div>
         <div class="container">
-            <input @onclick="e=>
-                                         {
-                                             if (Model != null)
-                                                 Model = new Data.Article();
-                                             if (Model.Node == null)
-                                                 Model.Node = new List<KeyValuePair<string, string>>();
-                                             Model.Node.Add(new KeyValuePair<string, string>());
-                                         }" type="button" class="btn btn-primary float-right" name="addButton" value="新增一条注释" />
-            <input @onclick="e=>
-                             {
-                                 dataService.Save(Model);
-                             }" class="btn btn-success float-right" name="save" value="保存" />
+            <input @onclick="AddNode" type="button" class="btn btn-primary float-right" name="addButton" value="新增一条注释" />
+            <input @onclick="Save" class="btn btn-success float-right" name="save" value="保存" />
         </div>
     </form>
 </div>
@@ -86,7 +78,18 @@
     {
         try
         {
-            Model = dataService.GetArticle(uuid);
+            if (uuid == null)
+            {
+                Model = new Data.Article
+                {
+                    Node = new List<Pair<string, string>>()
+                };
+                return;
+            }
+            else
+            {
+                Model = dataService.GetArticle(uuid);
+            }
         }
         catch (Exception e)
         {
@@ -94,10 +97,23 @@
             {
                 Title = "Oops,我们遇到了一点问题",
                 Body = "该文档可能已被他人删除、移动，被不规范地导入，也可能是系统故障。请尝试重新搜索并访问这个文档，如果所有文档都不可访问，请在“关于”页面查看帮助或联系系统管理员和开发者。",
-                Node = new List<KeyValuePair<string, string>>()
+                Node = new List<Pair<string, string>>()
             };
-            Model.Node.Add(new KeyValuePair<string, string>("错误信息", e.Message));
-            Model.Node.Add(new KeyValuePair<string, string>("错误堆栈", e.StackTrace));
+            Model.Node.Add(new Pair<string, string>("错误信息", e.Message));
+            Model.Node.Add(new Pair<string, string>("错误堆栈", e.StackTrace));
         }
+    }
+    private void AddNode()
+    {
+        if (Model == null)
+            Model = new Data.Article();
+        if (Model.Node == null)
+            Model.Node = new List<Pair<string, string>>();
+        Model.Node.Add(new Pair<string, string>("",""));
+    }
+    private void Save()
+    {
+        string uuid = dataService.Save(Model);
+        NavigationManager.NavigateTo($"article/{uuid}");
     }
 }

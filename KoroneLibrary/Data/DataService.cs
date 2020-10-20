@@ -64,10 +64,8 @@ namespace KoroneLibrary.Data
             }
             Logger.Info($"已加载 {ArticleDictionary.Count} 篇文档");
         }
-        public void Save(Article article)
+        public string Save(Article article)
         {
-            //temp
-            //
             if (string.IsNullOrEmpty(article.Uuid))
             { article.Uuid = Guid.NewGuid().ToString(); }
             if (string.IsNullOrEmpty(article.Filepath))
@@ -75,7 +73,10 @@ namespace KoroneLibrary.Data
             //{ article.Filepath = GetFullFileNameWithPath(article.Title); }
             if (!ArticleDictionary.ContainsKey(article.Uuid)) { ArticleDictionary.Add(article.Uuid, article); }
             else { ArticleDictionary[article.Uuid] = article; }
-            try { File.WriteAllText(article.Filepath, JsonSerializer.Serialize(article)); }
+            try {
+                File.WriteAllText(article.Filepath, JsonSerializer.Serialize(article));
+                return article.Uuid;
+            }
             catch (Exception e)
             {
                 Logger.Error($"写入文件出错:{article.Title}-{article.Filepath}\n{e.Message}\n{e.StackTrace}");
@@ -95,7 +96,7 @@ namespace KoroneLibrary.Data
             }
         }
 
-        public void Update(Article article)
+        public string Update(Article article)
         {
             if (!string.IsNullOrEmpty(article.Uuid))
             {
@@ -105,6 +106,7 @@ namespace KoroneLibrary.Data
             else
             { article.Uuid = Guid.NewGuid().ToString(); }
             Save(article);
+            return article.Uuid;
         }
     }
 }

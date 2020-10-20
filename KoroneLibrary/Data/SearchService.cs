@@ -43,8 +43,8 @@ namespace KoroneLibrary.Data
                                 {
                                     if ((j.Value ?? "").Contains(key))
                                     {
-                                        if (searchRes.Node == null) { searchRes.Node = new List<KeyValuePair<string, string>>(); }
-                                        searchRes.Node.Add(new KeyValuePair<string, string>(j.Key, j.Value));
+                                        if (searchRes.Node == null) { searchRes.Node = new List<Pair<string, string>>(); }
+                                        searchRes.Node.Add(new Pair<string, string>(j.Key, j.Value));
                                         selected = true;
                                     }
                                 }

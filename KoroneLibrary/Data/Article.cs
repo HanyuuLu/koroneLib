@@ -23,7 +23,7 @@ namespace KoroneLibrary.Data
         public string Body { get; set; } = "";
 
         [NotMapped]
-        public List<KeyValuePair<string, string>> Node { get; set; }
+        public List<Pair<string, string>> Node { get; set; }
 
         [JsonIgnore]
         public string Filepath { get; set; }
