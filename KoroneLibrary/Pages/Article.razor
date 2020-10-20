@@ -1,0 +1,104 @@
+﻿@page "/article/{uuid}"
+
+@using KoroneLibrary.Data;
+@inject KoroneLibrary.Data.DataService dataService;
+
+@{
+    init();
+}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/article/article-read.css" />
+</head>
+
+@{
+    var BreadCrumbDict = new List<string>();
+    if (Model != null)
+    {
+        if (!string.IsNullOrEmpty(Model.Grade)) BreadCrumbDict.Add($"{Model.Grade}");
+        if (!string.IsNullOrEmpty(Model.Unit)) BreadCrumbDict.Add($"{Model.Unit}");
+        if (!String.IsNullOrEmpty(Model.Tag))
+        {
+            var tagList = Model.Tag.Split("；");
+            Console.WriteLine(Model.Tag);
+            foreach (var item in tagList)
+            {
+                if(string.IsNullOrEmpty(item))
+                {
+                    BreadCrumbDict.Add(item);
+                }
+            }
+        }
+    }
+}
+<div class="container">
+    <div class="body-paper">
+
+        <div class="bread-crumb float-right m-2">
+            @{ foreach (var item in BreadCrumbDict)
+                {<NavLink class="badge badge-secondary" href="/Search">@item</NavLink>
+            }
+            }
+        </div>
+        <div class="triangle"></div>
+        <div class="container">
+            <div class="h4 text-center">
+                @Model.Title
+            </div>
+            <div class="p-1 text-center">
+                <NavLink href="/Article/Search" class="lead">@Model.Author</NavLink>
+            </div>
+
+            <div id="bodybox" class="text-body">
+                @Model.Body
+            </div>
+
+            <hr />
+            @if (Model.Node != null)
+            {
+                <table class="node table table-striped font-weight-light">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-light">注释</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Node != null)
+                        {
+                            @foreach (var item in Model.Node)
+                            {
+                                <tr>
+                                    <th class="font-weight-light">[@item.Key] @item.Value</th>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <NavLink class="btn btn-primary float-right" href="/Edit">编辑</NavLink>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string uuid { get; set; }
+    private KoroneLibrary.Data.Article Model;
+
+    private void init()
+    {
+        try
+        {
+            Model = dataService.GetArticle(uuid);
+        }
+        catch (Exception e)
+        {
+            Model = new Data.Article {
+                Title = "Oops,我们遇到了一点问题",
+                Body = "该文档可能已被他人删除、移动，被不规范地导入，也可能是系统故障。请尝试重新搜索并访问这个文档，如果所有文档都不可访问，请在“关于”页面查看帮助或联系系统管理员和开发者。",
+                Node = new List<KeyValuePair<string, string>>()
+        };
+        Model.Node.Add(new KeyValuePair<string, string>("错误信息", e.Message));
+        Model.Node.Add(new KeyValuePair<string, string>("错误堆栈", e.StackTrace));
+    }
+}
+}

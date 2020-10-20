@@ -1,6 +1,2 @@
-/bin
-/obj
 /.vs
 /.vscode
-/Lib
-*.jwk

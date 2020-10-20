@@ -1,0 +1,137 @@
+﻿@page "/search"
+@page "/search/{SearchContent}"
+@using KoroneLibrary.Data;
+
+@inject SearchService searchService;
+@inject NavigationManager  NavigationManager;
+
+@{
+    DoSearch();
+}
+<div class="container">
+    <h1 class="float-left">文档检索</h1>
+    <NavLink type="button" href="create" class="btn btn-info float-right" style="color:white">新建文档</NavLink>
+    <div class="container-fluid">
+
+        <div class="input-group mr-3" style="margin-top:40px">
+            <input @bind="SearchContent" type="text" name="searchword" class="form-control" placeholder="请输入若干关键词并用空格隔开" aria-label="搜索" aria-describedby="button-addon4">
+            <div class="input-group-append" id="button-addon4">
+                <button @onclick="DoSearch" class="btn btn-outline-secondary">搜索</button>
+            </div>
+        </div>
+        @if (IsSearch == true)
+        {
+            <div class="alert alert-success" style="margin-top:8px" role="alert">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L8 9.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                    <path fill-rule="evenodd" d="M8 2.5A5.5 5.5 0 1 0 13.5 8a.5.5 0 0 1 1 0 6.5 6.5 0 1 1-3.25-5.63.5.5 0 1 1-.5.865A5.472 5.472 0 0 0 8 2.5z" />
+                </svg>
+                为您找到 @Model.Count 个结果
+            </div>
+        }
+        <p class="attribute" style="float:right"><a asp-controller="Home" asp-action="About">想要精确搜索?请参阅搜索帮助</a></p>
+    </div>
+    <table class="table table-hover">
+        <tr>
+            <td>
+                文档
+            </td>
+            @if (IsSearch == true)
+            {
+                <td class="w-50">
+                    匹配结果
+                </td>
+            }
+            <td style="width:10em">
+                操作
+            </td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <h4>
+                        @item.Title
+                    </h4>
+                    <p>@item.Author @item.Tag @item.Grade</p>
+                </td>
+                @if (IsSearch == true)
+                {
+                    <td>
+                        <table class="table table-sm">
+                            @if (!string.IsNullOrEmpty(item.Grade))
+                            {
+                                <tr><td>年级</td><td>@item.Grade</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Unit))
+                            {
+                                <tr><td>单元</td><td>@item.Unit</td></tr>
+
+                            }
+                            @if (!string.IsNullOrEmpty(item.Index))
+                            {
+                                <tr><td>课文号</td><td>@item.Index</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.SubIndex))
+                            {
+                                <tr><td>子课文号</td><td>@item.SubIndex</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Author))
+                            {
+                                <tr><td>作者</td><td>@item.Author</td></tr>
+
+                            }
+                            @if (!string.IsNullOrEmpty(item.Tag))
+                            {
+                                <tr><td>标签</td><td>@item.Tag</td></tr>
+
+                            }
+                            @if (!string.IsNullOrEmpty(item.Body))
+                            {
+                                <tr><td>正文</td><td>@item.Body</td></tr>
+                            }
+                            @if (item.Node != null)
+                            {
+                                foreach (var node in item.Node)
+                                {
+                                    <tr><td>@node.Key</td><td>@node.Value</td></tr>
+                                }
+                            }
+                        </table>
+                    </td>
+                }
+            <td style="width:12em">
+                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Article/{item.Uuid}"))">查看</button>
+                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Edit/{item.Uuid}"))">编辑</button>
+                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Delete/{item.Uuid}"))">删除</button>
+            </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    public string SearchContent{ get; set; }
+    private IList<KoroneLibrary.Data.Article> Model = new List<KoroneLibrary.Data.Article>();
+    private bool IsSearch = false;
+
+
+    private void DoSearch()
+    {
+        if (string.IsNullOrEmpty(SearchContent))
+        {
+            IsSearch = false;
+            Model = searchService.AdvancedSearch(null);
+            return;
+        }
+        else
+        {
+            Model = searchService.AdvancedSearch(SearchContent);
+            IsSearch = true;
+            SearchContent = string.Empty;
+        }
+
+    }
+}
