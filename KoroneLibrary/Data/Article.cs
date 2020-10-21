@@ -7,10 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace KoroneLibrary.Data
 {
-    public class Article
+    public class Article:ICloneable
     {
-        private static readonly string FILENAME_FILTER = "[\\/:*?\" <>|]+";
-        private static readonly Regex regex = new Regex(FILENAME_FILTER);
+        //private static readonly string FILENAME_FILTER = "[\\/:*?\" <>|]+";
+        //private static readonly Regex regex = new Regex(FILENAME_FILTER);
 
         public string Uuid { get; set; }
         public string Grade { get; set; } = "";
@@ -28,6 +28,33 @@ namespace KoroneLibrary.Data
         [JsonIgnore]
         public string Filepath { get; set; }
 
-        public string FileName { get { return $"{regex.Replace(Title, "")}.json"; ; } }
+        public string FileName { get { return $"{Uuid}.json"; ; } }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        public Article DeepClone()
+        {
+            Article res = new Article
+            {
+                Uuid = Uuid,
+                Grade = Grade,
+                Unit = Unit,
+                Index = Index,
+                SubIndex = SubIndex,
+                Title = Title,
+                Author = Author,
+                Tag = Tag,
+                Body = Body,
+                Node = new List<Pair<string, string>>(),
+                Filepath = Filepath
+            };
+            foreach(Pair<string,string>item in Node)
+            {
+                res.Node.Add(item.DeepClone());
+            }
+            return res;
+        }
     }
 }

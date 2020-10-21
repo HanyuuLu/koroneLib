@@ -9,7 +9,7 @@
 }
 
 <head>
-    <link rel="stylesheet" type="text/css" href="~/css/article/article-read.css" />
+    <link rel="stylesheet" type="text/css" href="css/article/article-read.css" />
 </head>
 
 @{
@@ -33,10 +33,12 @@
 }
 <div class="container">
     <div class="body-paper">
-
+        <div class="float-left" style="margin-top:8px;">
+            <NavLink class="btn btn-primary" style="color:white;margin:0;margin-left:80px" @onclick="Edit">编辑</NavLink>
+        </div>
         <div class="bread-crumb float-right m-2">
             @{ foreach (var item in BreadCrumbDict)
-                {<NavLink class="badge badge-secondary" href="/Search">@item</NavLink>
+                {<NavLink class="badge badge-secondary" style="color:white" @onclick="e=>JumpSearch(item)">@item</NavLink>
             }
             }
         </div>
@@ -46,7 +48,7 @@
                 @Model.Title
             </div>
             <div class="p-1 text-center">
-                <NavLink href="/Article/Search" class="lead">@Model.Author</NavLink>
+                <NavLink class="lead" style="color:blue" @onclick="e=>JumpSearch(Model.Author)">@Model.Author</NavLink>
             </div>
 
             <div id="bodybox" class="text-body">
@@ -76,7 +78,6 @@
                 </table>
             }
         </div>
-        <NavLink class="btn btn-primary float-right" style="color:white" @onclick="Edit">编辑</NavLink>
     </div>
 </div>
 @code {
@@ -105,5 +106,9 @@
     private void Edit()
     {
         NavigationManager.NavigateTo($"edit/{uuid}");
+    }
+    private void JumpSearch(string searchContent)
+    {
+        NavigationManager.NavigateTo($"search/{searchContent}");
     }
 }

@@ -37,11 +37,17 @@ namespace KoroneLibrary.Data
                         if (prop.GetValue(i.Value) != null 
                             && prop.PropertyType.ToString().Contains("System.Collections"))
                         {
-                            foreach (var j in prop.GetValue(i.Value) as Dictionary<string, string>)
+                            foreach (var j in prop.GetValue(i.Value) as List<Pair<string, string>>)
                             {
                                 foreach (var key in searchList)
                                 {
                                     if ((j.Value ?? "").Contains(key))
+                                    {
+                                        if (searchRes.Node == null) { searchRes.Node = new List<Pair<string, string>>(); }
+                                        searchRes.Node.Add(new Pair<string, string>(j.Key, j.Value));
+                                        selected = true;
+                                    }
+                                    if ((j.Key ?? "").Contains(key))
                                     {
                                         if (searchRes.Node == null) { searchRes.Node = new List<Pair<string, string>>(); }
                                         searchRes.Node.Add(new Pair<string, string>(j.Key, j.Value));

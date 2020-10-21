@@ -45,7 +45,7 @@ namespace KoroneLibrary.Data
                     {
                         var jsonString = File.ReadAllText(filename);
                         var article = JsonSerializer.Deserialize<Article>(jsonString, options);
-
+                        article.Filepath = filename;
                         if (string.IsNullOrEmpty(article.Uuid))
                         {
                             article.Uuid = Guid.NewGuid().ToString();
@@ -70,7 +70,6 @@ namespace KoroneLibrary.Data
             { article.Uuid = Guid.NewGuid().ToString(); }
             if (string.IsNullOrEmpty(article.Filepath))
             { article.Filepath = Path.Join(DATA_FOLDER, article.FileName); }
-            //{ article.Filepath = GetFullFileNameWithPath(article.Title); }
             if (!ArticleDictionary.ContainsKey(article.Uuid)) { ArticleDictionary.Add(article.Uuid, article); }
             else { ArticleDictionary[article.Uuid] = article; }
             try {
@@ -95,12 +94,34 @@ namespace KoroneLibrary.Data
                 throw e;
             }
         }
+        public void Delete(string uuid)
+        {
+            if (string.IsNullOrEmpty(uuid)) { return; }
+            if (ArticleDictionary.ContainsKey(uuid))
+            {
+                if (File.Exists(ArticleDictionary[uuid].Filepath))
+                {
+                    try
+                    {
+                        File.Delete(ArticleDictionary[uuid].Filepath);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error($"删除文件出错: {uuid}\n{e.Message}\n{e.StackTrace}");
+                        throw e;
+                    }
+
+                }
+                ArticleDictionary.Remove(uuid);
+            }
+
+        }
 
         public string Update(Article article)
         {
             if (!string.IsNullOrEmpty(article.Uuid))
             {
-                if (ArticleDictionary.ContainsKey(article.Uuid) && article.Title != ArticleDictionary[article.Uuid].Title)
+                if (ArticleDictionary.ContainsKey(article.Uuid))
                 { Delete(ArticleDictionary[article.Uuid]); }
             }
             else

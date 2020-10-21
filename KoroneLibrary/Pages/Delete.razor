@@ -1,0 +1,36 @@
+﻿@page "/delete/{uuid}/{title}/{backURL}"
+@page "/delete/{uuid}/{backURL}"
+@page "/delete/{uuid}"
+@inject KoroneLibrary.Data.DataService dataService;
+@inject NavigationManager NavigationManager;
+<div class="card container-sm" style="text-align:center">
+    <h4>确认要删除文档[@title]吗？</h4>
+    <div>
+        <button class="btn btn-primary" style="display:inline" @onclick="Back">取消</button>
+        <button class="btn btn-danger" style="display:inline" @onclick="DeleteArticle">删除</button>
+    </div>
+
+</div>
+@code {
+    [Parameter]
+    public string uuid { get; set; }
+    [Parameter]
+    public string title { get; set; }
+    [Parameter]
+    public string backURL { get; set; }
+
+    private void DeleteArticle()
+    {
+        dataService.Delete(uuid);
+        NavigationManager.NavigateTo("search");
+
+    }
+    private void Back()
+    {
+        if (backURL == "edit")
+        {
+            backURL = $"edit/{uuid}";
+        }
+        NavigationManager.NavigateTo(backURL);
+    }
+}

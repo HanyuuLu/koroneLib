@@ -100,22 +100,22 @@
                         </table>
                     </td>
                 }
-            <td style="width:12em">
-                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Article/{item.Uuid}"))">查看</button>
-                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Edit/{item.Uuid}"))">编辑</button>
-                <button class="btn btn-sm btn-light" @onclick="@(e=>NavigationManager.NavigateTo($"Delete/{item.Uuid}"))">删除</button>
-            </td>
+                <td style="width:12em">
+                    <button class="btn btn-sm btn-light" @onclick="@(e => NavigationManager.NavigateTo($"article/{item.Uuid}"))">查看</button>
+                    <button class="btn btn-sm btn-light" @onclick="@(e => NavigationManager.NavigateTo($"edit/{item.Uuid}"))">编辑</button>
+                    <button class="btn btn-sm btn-light" @onclick="@(e => NavigationManager.NavigateTo($"delete/{item.Uuid}/{item.Title}/search"))">删除</button>
+                </td>
             </tr>
         }
     </table>
 </div>
 
-
 @code {
     [Parameter]
-    public string SearchContent{ get; set; }
+    public string SearchContent { get; set; }
     private IList<KoroneLibrary.Data.Article> Model = new List<KoroneLibrary.Data.Article>();
     private bool IsSearch = false;
+    private string uuidToDelete;
 
 
     private void DoSearch()
@@ -132,6 +132,5 @@
             IsSearch = true;
             SearchContent = string.Empty;
         }
-
     }
 }

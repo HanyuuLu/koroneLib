@@ -11,12 +11,16 @@
 }
 
 <head>
-    <link rel="stylesheet" type="text/css" href="~/css/article/article-read.css" />
+    <link rel="stylesheet" type="text/css" href="css/article/article-read.css" />
 </head>
 
 <div class="container">
-    <form class="body-paper" method="post" asp-action="Edit">
-
+    <div class="body-paper">
+        <div class="float-left" style="margin-top:8px;">
+            <NavLink @onclick="Update" class="btn btn-primary" style="color:white;margin:0;margin-left:80px">保存</NavLink>
+            <NavLink @onclick="@(e => NavigationManager.NavigateTo($"delete/{Model.Uuid}/{Model.Title}/edit"))" class="btn btn-danger" style="color:white;margin:0;margin-left:10px">删除</NavLink>
+        </div>
+        
         <div class="bread-crumb float-right m-2">
             <input type="text" class="p1 underline-box" placeholder="标签，用分号；隔开" @bind="Model.Tag" />
         </div>
@@ -44,17 +48,23 @@
                 <tbody>
                     @if (Model.Node != null)
                     {
-                        @foreach(Pair<string,string> item in Model.Node)
+                        @foreach (Pair<string, string> item in Model.Node)
                         {
                             <tr>
                                 <td class="w-25">
-                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="引用" @bind="item.Key"/>
+                                    <input class="font-weight-light underline-box w-100" type="text" placeholder="引用" @bind="item.Key" />
                                 </td>
                                 <td class="w-75">
-                                    <input class="font-weight-light text-center underline-box w-100" type="text" placeholder="注释" @bind="item.Value" />
+                                    <input class="font-weight-light underline-box w-100" type="text" placeholder="注释" @bind="item.Value" />
                                 </td>
                                 <td>
-                                    <input type="button" class="btn btn-light" value="x" />
+                                    <button class="btn btn-outline-dark" @onclick="e=>Model.Node.Remove(item)">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                        </svg>
+                                    </button>
+
                                 </td>
                             </tr>
                         }
@@ -64,10 +74,10 @@
             </table>
         </div>
         <div class="container">
-            <input @onclick="AddNode" type="button" class="btn btn-primary float-right" name="addButton" value="新增一条注释" />
-            <input @onclick="Save" class="btn btn-success float-right" name="save" value="保存" />
+            <input @onclick="AddNode" type="button" class="btn btn-primary w-100w" name="addButton" value="新增一条注释" />
+
         </div>
-    </form>
+    </div>
 </div>
 @code {
     [Parameter]
@@ -80,11 +90,11 @@
         {
             if (uuid == null)
             {
-                Model = new Data.Article
+                string uuid = dataService.Save(Model = new Data.Article
                 {
                     Node = new List<Pair<string, string>>()
-                };
-                return;
+                });
+                NavigationManager.NavigateTo($"edit/{uuid}");
             }
             else
             {
@@ -111,9 +121,16 @@
             Model.Node = new List<Pair<string, string>>();
         Model.Node.Add(new Pair<string, string>("",""));
     }
-    private void Save()
+    private void Update()
     {
-        string uuid = dataService.Save(Model);
+        string uuid = dataService.Update(Model);
         NavigationManager.NavigateTo($"article/{uuid}");
+    }
+    private void DeleteNode(int src)
+    {
+        if(Model!=null && Model.Node!=null)
+        {
+            Model.Node.Remove(Model.Node[src]);
+        }
     }
 }
