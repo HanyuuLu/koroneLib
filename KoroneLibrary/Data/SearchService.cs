@@ -10,7 +10,7 @@ namespace KoroneLibrary.Data
     {
         static readonly Random random = new Random();
         readonly DataService dataServer;
-        
+
         public SearchService(DataService dataServer) { this.dataServer = dataServer; }
         public SearchService() { }
 
@@ -31,23 +31,17 @@ namespace KoroneLibrary.Data
                     bool selected = false;
                     foreach (var prop in propList)
                     {
-                        if (prop.Name == "Filepath" || prop.Name== "FileName")
+                        if (prop.Name == "Filepath" || prop.Name == "FileName")
                         { continue; }
                         // Collection类型，注解
-                        if (prop.GetValue(i.Value) != null 
+                        if (prop.GetValue(i.Value) != null
                             && prop.PropertyType.ToString().Contains("System.Collections"))
                         {
                             foreach (var j in prop.GetValue(i.Value) as List<Pair<string, string>>)
                             {
                                 foreach (var key in searchList)
                                 {
-                                    if ((j.Value ?? "").Contains(key))
-                                    {
-                                        if (searchRes.Node == null) { searchRes.Node = new List<Pair<string, string>>(); }
-                                        searchRes.Node.Add(new Pair<string, string>(j.Key, j.Value));
-                                        selected = true;
-                                    }
-                                    if ((j.Key ?? "").Contains(key))
+                                    if ((j.Value ?? "").Contains(key) || (j.Key ?? "").Contains(key))
                                     {
                                         if (searchRes.Node == null) { searchRes.Node = new List<Pair<string, string>>(); }
                                         searchRes.Node.Add(new Pair<string, string>(j.Key, j.Value));
@@ -68,7 +62,7 @@ namespace KoroneLibrary.Data
                                     {
                                         Regex regex = new Regex($"[^。?……！\\s]*{key}[^。?……！\\s]*");
                                         var regRes = regex.Matches(prop.GetValue(i.Value).ToString());
-                                        resString =  string.Join('\n', regRes);
+                                        resString = string.Join('\n', regRes);
                                     }
                                     prop.SetValue(searchRes, resString);
                                     selected = true;
