@@ -1,0 +1,1 @@
+docker build . -t hanyuufurude/korone-library:v3.0
